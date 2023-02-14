@@ -1,0 +1,27 @@
+body{
+    background-color: #1a242e;
+    color:white;
+}
+.logo{
+    width: 50px;
+    height: 30px;
+    
+    border-radius: 12px;
+    background-image: linear-gradient(#de7224, white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.logo-play{
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 20px solid white;
+    transform: rotate(90deg);
+   
+}
+.search{
+    background-image: linear-gradient(#de7224, white);
+    border-radius: 10px;
+}

@@ -1,0 +1,67 @@
+{% extends 'basepage/base.html' %}
+
+
+ {% block script%}
+    {% endblock %}
+{% block content %}
+
+
+<div class="container">
+    
+    <div class="row">
+
+        
+        <div class="col-sm-4">
+            <h2>Checkout</h2>
+            <p>Plan- {{plan.price}} <span class="text-danger">
+                {%if plan.name == 'Monthly' %}/month
+                {%else%}
+                    /year 
+                {% endif %}</span></p>
+            <form action="post" method="post" id="payment-form">
+                {% csrf_token %}
+                <div>
+                    <label for="card-element">
+                        
+                    </label>
+                    <div id="card-element">
+
+                    </div>
+                    <div id="card-errors" role="alert"></div>
+                </div>
+                <div class="form-group">
+                    <input type="hidden" name='amount' value="{{plan.price}}">
+
+                </div>
+                <button type="submit" class="btn btn-outline-primary ">Checkout</button>
+            </form>
+
+            <br>
+            
+
+              <form action="{% url 'charge' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name='amount' value="{{plan.price}}">
+                
+                <script
+                
+                  src="https://checkout.stripe.com/checkout.js"
+                  class="stripe-button"
+                  data-key="pk_test_51MZTIYAxauMCkZX5vQxHvQOCM27gWyQ4TVCcYZHiPaIWboC1LV2idza1JB5rysopTJ3a1uemD2VWIiTgcBWjPn9m00sDSuagLo"
+                  
+                  data-amount= "{{pay_button}}"
+                  data-name="charge"
+                  data-description="Checkout"
+                  data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+                  data-locale="auto">
+                </script>
+              </form>
+
+            
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+            

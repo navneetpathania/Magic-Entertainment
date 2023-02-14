@@ -1,0 +1,32 @@
+{% extends 'basepage/base.html' %}
+{% block content %}
+  <h2>Subscription Plans</h2>
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>Price</th>
+      <!-- <th>Description</th> -->
+      <th>Actions</th>
+    </tr>
+    {% for plan in plans %}
+      <tr>
+        <td>{{ plan.name }}</td>
+        <td>{{ plan.price }}</td>
+        <!-- <td>{{ plan.description }}</td> -->
+        <td>
+            {% for subscription in request.user.subscription_set.all %}
+              {% if subscription.plan == plan%}
+                <a href="{% url 'cancel' subscription.id %}">Cancel</a>
+              
+            {% endif %}
+              
+            {% endfor %}
+            {% if not request.user.subscription_set.all.exists %}
+              <a href="{% url 'subscribe' plan.id %}">Subscribe</a>
+            {% endif %}
+           
+        </td>
+      </tr>
+    {% endfor %}
+  </table>
+{% endblock %}
