@@ -11,18 +11,13 @@ class Plan(models.Model):
 
 class Subscription(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
-    start_date = models.DateField()
-    end_date = models.DateField()
-    active = models.BooleanField(default=True)
+    # plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
+    checkouts_session_id = models.CharField(max_length=200, null=True, blank=True)
+    active = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'{self.user.username} ({self.plan.name})'
+        return f'{self.user.username} ({self.active})'
 
-    def renew(self):
-        self.start_date = self.end_date + timedelta(days=1)
-        self.end_date = self.start_date + timedelta(days=365)
-        self.save()
 
-    def cancel(self):
-        self.delete()
+
+

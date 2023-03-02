@@ -17,7 +17,8 @@ urlpatterns = [
     path('password-reset-confirm/<uidb64>/<token>/',auth_views.PasswordResetConfirmView.as_view(template_name='user/password_reset_confirm.html'),name='password_reset_confirm'),
     path('password-reset-complete/',auth_views.PasswordResetCompleteView.as_view(template_name='user/password_reset_complete.html'),name='password_reset_complete'),
     path('register/',user_views.register,name='user-register'),
-    path('profile/',user_views.profile,name='profile')
+    path('profile/',user_views.profile,name='profile'),
+    path("stripe/", include("djstripe.urls", namespace="djstripe")),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,57 +1,88 @@
-from django.shortcuts import render, redirect
-import datetime
 from django.contrib.auth.decorators import login_required
-import stripe
 from django.conf import settings
-from django.http import JsonResponse
-stripe.api_key = settings.STRIPE_SECRET_KEY
+from django.shortcuts import render, redirect
+import stripe
+import json
+from django.http import JsonResponse, HttpResponse
+from djstripe.models import Product
+import djstripe
+import os
+from .models import Subscription
 
-# Create your views here.
-from .models import Plan, Subscription
+stripe.api_key = settings.STRIPE_TEST_SECRET_KEY
 @login_required
-def plans(request):
-    plans = Plan.objects.all()
-    return render(request, 'subscriptions/plans.html', {'plans': plans})
+def checkout(request):
+  # Prices = stripe.Price.list()
+  products = stripe.Product.list()
+  pro = {}
+  for product in products:
+    prices = stripe.Price.list(product=product.id)
+    context = {
+          'product': product,
+          'prices': prices['data']
+      }
+  return render(request,"subscriptions/checkout.html",context)
 
-def charge(request):
+@login_required
+def create_checkout_session(request):
     if request.method == 'POST':
-        # Get the card information from the request
-        token = request.POST.get('stripeToken')
-        email = request.POST.get('stripeEmail')
-        print(email)
-        # allvariables = request.POST
-        # print('this is all variables ------------',allvariables)
-        amount = int(float(request.POST.get('amount')))
+        # Reads application/json and returns a response
+        lookup_key=request.POST.get('lookup_key'),
+        try:  
+          prices = stripe.Price.list(
+              lookup_keys=lookup_key,
+              expand=['data.product']
+          )
 
-       
+          checkout_session = stripe.checkout.Session.create(
+              line_items=[
+                  {
+                      'price': prices.data[0].id,
+                      'quantity': 1,
+                  },
+              ],
+              mode='subscription',
+              success_url= "http://localhost:8000/plans"+
+              '/success/',
+              cancel_url="http://localhost:8000/plans" + '/cancel',
+          )
+          
+          session = stripe.checkout.Session.retrieve(checkout_session.id)
+          checkout_session_id = session['id']
+          payment_status = session['payment_status']
+          subscription = Subscription.objects.create(user=request.user, checkouts_session_id=checkout_session_id,active=True)
+          subscription.save()
+          return redirect(checkout_session.url, code=303,session_id=session['id'])
+        except Exception as e:
+            print(e)
+            return "Server error", 500
+@login_required
+def create_portal_session(request):
+  if request.method == "POST":
+    # For demonstration purposes, we're using the Checkout session to retrieve the customer ID.
+    # Typically this is stored alongside the authenticated user in your database.
+    subscription_obj = Subscription.objects.get(user=request.user)
+    checkout_session_id = subscription_obj.checkouts_session_id
+    checkout_session = stripe.checkout.Session.retrieve(checkout_session_id)
 
-        # Create the charge with the card information and amount
-        try:
-            charge = stripe.Charge.create(
-                amount=amount*100,
-                currency='cad',
-                source=token,
-                description='Premium plan',
-                receipt_email=email
-            )
-            return render(request, 'subscriptions/success.html')
-        except stripe.error.CardError as e:
-            return render(request, 'subscriptions/fail.html')
-    return render(request, 'subscriptions/fail.html')
+    # This is the URL to which the customer will be redirected after they are
+    # done managing their billing with the portal.
+    return_url = "http://localhost:8000/plans/cancel"
 
+    portalSession = stripe.billing_portal.Session.create(
+        customer=checkout_session.customer,
+        return_url=return_url,
+    )
+    return redirect(portalSession.url, code=303)
+  return "server error", 500
 
-def subscribe(request, plan_id):
-    plan = Plan.objects.get(id=plan_id)
-    user = request.user
-    pay_button = plan.price*100
-    return render(request, "subscriptions/checkout.html",{'plan':plan,'user':user, 'pay_button':pay_button})
-    # subscription = Subscription(user=user, plan=plan)
-    # subscription.start_date = datetime.date.today()
-    # subscription.end_date = subscription.start_date + datetime.timedelta(days=365)
-    # subscription.save()
-    # return redirect('plans')
+def cancel(request):
+  sub_obj = Subscription.objects.get(user=request.user.id)
+  if sub_obj:
+    sub_obj.delete()
+    return render(request, "subscriptions/cancel.html")
+  else:
+    return "something went wrong! can't complete the request contact us if you need help"
 
-def cancel(request, subscription_id):
-    subscription = Subscription.objects.get(id=subscription_id)
-    subscription.cancel()
-    return redirect('plans')
+def success(request):
+  return render(request, "subscriptions/success.html")

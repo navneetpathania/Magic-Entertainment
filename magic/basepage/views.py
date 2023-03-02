@@ -3,13 +3,20 @@ from django.http import FileResponse
 from .models import Song, Movie
 from subscriptions.models import Subscription
 import datetime
+from subscriptions.models import Subscription
 
 # Create your views here.
 def homeView(request):
-    return render(request, "basepage/home.html")
+    try:
+        sub_obj = Subscription.objects.get(user=request.user)
+        sub_status = sub_obj.active
+    except:
+        sub_status = False
+    print(request.user)
+    return render(request, "basepage/home.html",{'sub_status':sub_status})
 
 def songs_view(request):
-    subscribed = Subscription.objects.filter(user=request.user, end_date__gte=datetime.date.today()).exists()
+    subscribed = Subscription.objects.get(user=request.user)
     if subscribed:
         songs = Song.objects.all()
     else:

@@ -6,6 +6,7 @@ from PIL import Image
 class CreateProfile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	image = models.ImageField(default='default.jpg', blank=True, null=True, upload_to='profile_pic')
+	# is_paid = models.BooleanField(default=False)ss
 
 	def __str__(self):
 		return f'{self.user.username } profile'

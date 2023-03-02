@@ -4,10 +4,12 @@ from .form import UserRegisterForm,userUpdateForm,profileUpdateForm
 from django.contrib import messages
 from .models import CreateProfile
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 def register(request):
 	if request.method == 'POST':
 		form = UserRegisterForm(request.POST)
+
 		if form.is_valid():
 			username = form.cleaned_data.get('username')
 			messages.success(request,f'Account is crated for {username}')

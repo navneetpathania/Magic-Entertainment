@@ -1,3 +1,4 @@
+{% extends 'basepage/base.html' %}
 
 {% load crispy_forms_tags %}
 {% block content %}
@@ -24,5 +25,53 @@
 	  <!-- FORM HERE -->
 
 	</div>
+
+
+	<div class="container my-5">
+		<div class="row justify-content-center">
+		  <div class="col-md-8">
+			<div class="card">
+			  <div class="card-header bg-primary text-white">
+				<h4 class="mb-0">User Profile</h4>
+			  </div>
+			  <div class="card-body">
+				<form>
+				  <div class="form-group">
+					<label for="username">Username:</label>
+					<input type="text" class="form-control" id="username" name="username" value="johndoe" readonly>
+				  </div>
+				  <div class="form-group">
+					<label for="email">Email:</label>
+					<input type="email" class="form-control" id="email" name="email" value="johndoe@example.com" readonly>
+				  </div>
+				  <div class="form-group">
+					<label for="image">Image:</label>
+					<div class="row">
+					  <div class="col-md-4">
+						<img src="https://via.placeholder.com/150" class="img-fluid rounded" alt="User Image">
+					  </div>
+					  <div class="col-md-8">
+						<p class="mb-1">Upload a new image:</p>
+						<div class="custom-file">
+						  <input type="file" class="custom-file-input" id="image" name="image">
+						  <label class="custom-file-label" for="image">Choose file</label>
+						</div>
+					  </div>
+					</div>
+				  </div>
+				  <div class="form-group">
+					<label for="subscription">Subscription Plan:</label>
+					<select class="form-control" id="subscription" name="subscription" disabled>
+					  <option value="basic">Basic</option>
+					  <option value="premium" selected>Premium</option>
+					  <option value="ultimate">Ultimate</option>
+					</select>
+				  </div>
+				</form>
+			  </div>
+			</div>
+		  </div>
+		</div>
+	  </div>
 
 {% endblock content %}
