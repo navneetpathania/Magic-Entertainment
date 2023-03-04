@@ -136,20 +136,19 @@ LOGIN_URL = 'login'
 MEDIA_ROOT = os.path.join(BASE_DIR,'Media')
 MEDIA_URL = '/media/'
 
+
+#email setup
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_USE_TLS  =True
-# EMAIL_HOST_USER = os.environ.get("EMAIL")
-# EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_PASS")
-EMAIL_HOST_USER = 'navneetpathania210@gmail.com'
-EMAIL_HOST_PASSWORD = 'yhkiqzlgqwlympvc'
+EMAIL_USE_TLS  = True
+EMAIL_HOST_PASSWORD = os.environ.get("EPASS")
+EMAIL_HOST_USER = "navneetpathania210@gmail.com"
+
 
 
 # payment gateway
-STRIPE_TEST_PUBLIC_KEY   = 'pk_test_51MZTIYAxauMCkZX5vQxHvQOCM27gWyQ4TVCcYZHiPaIWboC1LV2idza1JB5rysopTJ3a1uemD2VWIiTgcBWjPn9m00sDSuagLo'
-STRIPE_TEST_SECRET_KEY  = 'sk_test_51MZTIYAxauMCkZX5KYrLEAKj9xInrKUN2kY0DiH11QMdeW6cS6TwaoERB33Vf8yrOut6PPql6jpHxw18Bjz4p8SD004tsCapAM'
-# STRIPE_PLAN_MONTHLY_ID = 'price_1MbXxwAxauMCkZX5cJ4srOhb'
-# STRIPE_PLAN_ANNUAL_ID ='price_1MbXxwAxauMCkZX51U2IRxxT'
-DJSTRIPE_WEBHOOK_SECRET = "whsec_50c6c42bcab0e104a523b72cb1b5205922a12ee7c5704b466b44c657e7a12bea"
+STRIPE_TEST_PUBLIC_KEY   = os.environ.get("STRIPE_TEST_PUBLIC_KEY")
+STRIPE_TEST_SECRET_KEY  = os.environ.get("STRIPE_TEST_SECRET_KEY")
+DJSTRIPE_WEBHOOK_SECRET = os.environ.get("DJSTRIPE_WEBHOOK_SECRET")
 DJSTRIPE_FOREIGN_KEY_TO_FIELD = "id"
