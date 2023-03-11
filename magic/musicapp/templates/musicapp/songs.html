@@ -1,0 +1,131 @@
+{% extends 'basepage/base.html' %}
+{%block style%}
+<style>
+  .wrapper{
+    height:auto;
+    display: flex;
+    overflow-x:auto;
+  }
+  .wrapper::-webkit-scrollbar{
+    width:0;
+  }
+  .wrapper .item{
+    /* display: flex; */
+    width:20vw;
+    height: auto;
+    text-align: center;
+    margin-right:10px;
+    border: 1px solid black; 
+    border-radius: 8px;
+    
+  }
+  .song-image{
+    width:20vw;
+    /* height: 50%; */
+  }
+  a {
+    color: white;
+    text-decoration: none;
+  }
+</style>
+{% endblock%}
+{% block content %}
+<!-- Include Bootstrap CSS -->
+<h1>Popular songs </h1>
+<div class="wrapper ">
+  
+    {% for song in popular_songs %}
+    <a href="{% url 'play_song' pk=song.pk %}" class="text-white"> 
+    <div class="item ">
+        <img src="{{song.album.image.url}}" alt="{{song.title}}" class="song-image">
+        <div class="songbody">
+          <div class="text-left p-2">
+            <div>Title: {{song.title}}</div>
+            <div>Artist: {% for artist in song.artists.all %}
+              {{artist}}
+              {%endfor%}
+            </div>
+            <div ><i class="fas fa-thumbs-up"></i> {{song.total_likes}}</div>
+
+          </div>
+
+        </div>
+    </div>
+    </a>
+    {% endfor %}
+
+</div>
+<h1> Recent added </h1>
+<div class="wrapper ">
+  
+  {% for song in latest_songs %}
+  <a href="{% url 'play_song' pk=song.pk %}" class="text-white"> 
+  <div class="item ">
+      <img src="{{song.album.image.url}}" alt="{{song.title}}" class="song-image">
+      <div class="songbody">
+        <div class="text-left p-2">
+          <div>Title: {{song.title}}{{ song.created_at }}</div>
+          <div>Artist: {% for artist in song.artists.all %}
+            {{artist}}
+            {%endfor%}
+          </div>
+          <div ><i class="fas fa-thumbs-up"></i> {{song.total_likes}}</div>
+
+        </div>
+
+      </div>
+  </div>
+  </a>
+  {% endfor %}
+
+</div>
+<h1>Rap songs</h1>
+<div class="wrapper ">
+  {% for song in rap_songs %}
+  <a href="{% url 'play_song' pk=song.pk %}" class="text-white"> 
+  <div class="item ">
+      <img src="{{song.album.image.url}}" alt="{{song.title}}" class="song-image">
+      <div class="songbody">
+        <div class="text-left p-2">
+          <div>Title: {{song.title}}  {{ song.genre }}</div>
+          <div>Artist: {% for artist in song.artists.all %}
+            {{artist}}
+            {%endfor%}
+          </div>
+          <div ><i class="fas fa-thumbs-up"></i> {{song.total_likes}}</div>
+
+        </div>
+
+      </div>
+  </div>
+  </a>
+  {% endfor %}
+
+</div>
+<h2>
+  Romatic songs
+</h2>
+<div class="wrapper ">
+  {% for song in romatic_songs %}
+  <a href="{% url 'play_song' pk=song.pk %}" class="text-white"> 
+  <div class="item ">
+      <img src="{{song.album.image.url}}" alt="{{song.title}}" class="song-image">
+      <div class="songbody">
+        <div class="text-left p-2">
+          <div>Title: {{song.title}}  {{ song.genre }}</div>
+          <div>Artist: {% for artist in song.artists.all %}
+            {{artist}}
+            {%endfor%}
+          </div>
+          <div ><i class="fas fa-thumbs-up"></i> {{song.total_likes}}</div>
+
+        </div>
+
+      </div>
+  </div>
+  </a>
+  {% endfor %}
+
+</div>
+
+{% endblock %}

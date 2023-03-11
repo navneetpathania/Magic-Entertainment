@@ -1,0 +1,62 @@
+{% extends 'basepage/base.html' %}
+{% block style %}
+<style>
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height:30vh;
+}
+.card {
+  background-color: #333;
+  color: #fff;
+}
+
+.card-header {
+  font-size: 1.5rem;
+}
+
+.card-subtitle {
+  font-size: 1.2rem;
+  font-style: italic;
+}
+
+audio {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+</style>
+{% endblock %}
+{% block content %}
+  <div class="container align-center">
+    <div class="row">
+      <div class="col-md-8 offset-md-2">
+        <div class="card mb-3">
+          <div class="card-header">
+            <h5 class="card-title">{{ song.title }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">
+                {% for artist in song.artists.all %}
+                {{artist}}
+              
+                {%endfor%}</h6>
+            <span class="text-right"> <a href="{% url 'song_download' song.pk %}"><i class="fa fa-download fa-2xl" aria-hidden="true"></i></a>
+                </span>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-4">
+                <img class="img-fluid rounded" src="{{ song.album.image.url }}" alt="{{ song.album.name }}">
+              </div>
+              <div class="col-md-8">
+                <audio controls>
+                  <source src="{{ song.audio_file.url }}" type="audio/mpeg">
+                </audio>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

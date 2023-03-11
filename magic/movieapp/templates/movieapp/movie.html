@@ -1,0 +1,64 @@
+{% extends 'basepage/base.html' %}
+{% block style %}
+<style>
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height:30vh;
+}
+.card {
+  background-color: #333;
+  color: #fff;
+}
+
+.card-header {
+  font-size: 1.5rem;
+}
+
+.card-subtitle {
+  font-size: 1.2rem;
+  font-style: italic;
+}
+
+video {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+</style>
+{% endblock %}
+{% block content %}
+  <div class="container align-center">
+    <div class="row">
+      <div class="col-md-8 offset-md-2">
+        <div class="card mb-3">
+          <div class="card-header">
+            <h5 class="card-title">{{ movie.title }}</h5>
+            <!-- <h6 class="card-subtitle mb-2 text-muted">
+                {% for artist in movie.artists.all %}
+                {{artist}}
+              
+                {%endfor%}</h6> -->
+            <span class="text-right"> <a href="{% url 'movie_download' movie.pk %}"><i class="fa fa-download fa-2xl" aria-hidden="true"></i></a>
+                </span>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-4">
+                <!-- <img class="img-fluid rounded" src="{{ movie.album.image.url }}" alt="{{ movie.album.name }}"> -->
+              </div>
+              <div class="col-md-8">
+                <video width="400" controls>
+                    <source src="{{ movie.video_file.url }}" type="video/mp4">
+                    Your browser does not support HTML video.
+                  </video>
+                  <a href="{% url 'movie_download' movie.pk %}"><i class="fa fa-download fa-2xl" aria-hidden="true"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

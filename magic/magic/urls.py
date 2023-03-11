@@ -9,6 +9,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('basepage.urls')),
+    path("music/",include('musicapp.urls')),
+    path("movies/",include('movieapp.urls')),
     path('plans/',include('subscriptions.urls')),
     path('login/',auth_views.LoginView.as_view(template_name='user/login.html'),name='login'),
     path('logout/',auth_views.LogoutView.as_view(template_name='user/logout.html'),name='logout'),
@@ -19,6 +21,7 @@ urlpatterns = [
     path('register/',user_views.register,name='user-register'),
     path('profile/',user_views.profile,name='profile'),
     path("stripe/", include("djstripe.urls", namespace="djstripe")),
+
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

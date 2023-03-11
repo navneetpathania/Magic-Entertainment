@@ -5,6 +5,7 @@ from django.contrib import messages
 from .models import CreateProfile
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from subscriptions.models import Subscription
 
 def register(request):
 	if request.method == 'POST':
@@ -29,6 +30,12 @@ def profile(request):
 			i_form.save()
 			messages.success(request,'Your account is updated successfully!')
 			return redirect('profile')
+		else:
+			context = {
+				'u_form':u_form,
+				'i_form':i_form
+				}
+			return render(request,'user/profile.html',context)
 
 	else:
 		u_form = userUpdateForm(instance=request.user)
@@ -37,5 +44,12 @@ def profile(request):
 		'u_form':u_form,
 		'i_form':i_form
 		}
+		subscription = Subscription.objects.filter(user=request.user).exists()
+		if subscription:
+			context['subscription'] = "Active"
+		else:
+			context['subscription'] = "Not active"
+
+		# sta = Subscription.objects.filter(User__id=request.user.id)
 		return render(request,'user/profile.html',context)
 

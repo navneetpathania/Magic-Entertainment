@@ -8,7 +8,7 @@ body{
     height: 30px;
     
     border-radius: 12px;
-    background-image: linear-gradient(#de7224, white);
+    background-image: linear-gradient(#2691D9, black);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -23,7 +23,7 @@ body{
    
 }
 .search{
-    background-image: linear-gradient(#de7224, white);
+    background-image: linear-gradient(#2691D9, black);
     border-radius: 10px;
 }
 

@@ -1,0 +1,71 @@
+
+
+{% extends 'basepage/base.html' %}
+{%block style%}
+<style>
+  .wrapper{
+    height:auto;
+    display: flex;
+    overflow-x:auto;
+  }
+  .wrapper::-webkit-scrollbar{
+    width:0;
+  }
+  .wrapper .item{
+    /* display: flex; */
+    width:20vw;
+    height: auto;
+    text-align: center;
+    margin-right:10px;
+    border: 1px solid black; 
+    border-radius: 8px;
+    
+  }
+  .song-image{
+    width:20vw;
+    /* height: 50%; */
+  }
+  a {
+    color: white;
+    text-decoration: none;
+  }
+</style>
+{% endblock%}
+
+
+{% block content %}
+<!-- Include Bootstrap CSS -->
+<h1>Popular songs </h1>
+<div class="wrapper ">
+  
+  {% for movie in movies %}
+    <a href="{% url 'play_movie' pk=movie.pk %}" class="text-white"> 
+    <div class="item ">
+      <img class="account-img" style = 'max-width: 100px'src="{{ movie.image.url }}" alt="image not found">
+        <div class="songbody">
+          <div class="text-left p-2">
+            <h2>{{ movie.title }}</h2>
+              <p>Release date: {{ movie.release_date }}</p>
+              <p>Director: {{ movie.director }}</p>
+              <p>Rating: {{ movie.rating }}</p>
+            </div>
+            <div ><i class="fas fa-thumbs-up"></i> {{movie.total_likes}}</div>
+
+          </div>
+
+        </div>
+    </div>
+    </a>
+    {% endfor %}
+
+</div>
+<h1> Recent added </h1>
+
+<h1>Rap songs</h1>
+
+<h2>
+  Romatic songs
+</h2>
+
+
+{% endblock %}

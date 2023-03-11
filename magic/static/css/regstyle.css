@@ -16,13 +16,13 @@ body{
   top: 55%;
   left: 55%;
   bottom: 55%;
+  padding-bottom: 10px;
   transform: translate(-50%, -55%);
   width: 400px;
   height: auto;
   background: white;
   border-radius: 15px 15px 0px 0px;
   box-shadow: 10px 10px 15px rgba(0,0,0,0.05);
-  
 }
 .center h1{
   text-align: center;
