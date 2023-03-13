@@ -156,8 +156,3 @@ STRIPE_TEST_SECRET_KEY  = os.environ.get("STRIPE_TEST_SECRET_KEY")
 DJSTRIPE_WEBHOOK_SECRET = os.environ.get("DJSTRIPE_WEBHOOK_SECRET")
 DJSTRIPE_FOREIGN_KEY_TO_FIELD = "id"
 
-
-
-
-clientid = '682467524481-fr64gth0v46mr2utqgmpi53snpaiajgg.apps.googleusercontent.com'
-client_secret = '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'
