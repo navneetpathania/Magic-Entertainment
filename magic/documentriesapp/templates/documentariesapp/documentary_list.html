@@ -1,0 +1,178 @@
+
+{% extends 'basepage/base.html' %}
+{%block style%}
+<style>
+  .wrapper{
+    /* height:auto; */
+    display: flex;
+    overflow-x:auto;
+    flex-direction: row;
+    /* justify-content: space-evenly; */
+  }
+  .wrapper::-webkit-scrollbar{
+    width:0;
+  }
+  .wrapper .item{
+    min-width:30vw;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black; 
+    border-radius: 8px;
+    margin-left: 10px;
+  }
+
+  .item img{
+    max-width: 100%;
+    max-height: 37%;
+
+  }
+.item .songbody{
+  text-align: left;
+  justify-content: space-between;
+}
+
+@media screen and (max-width: 768px) {
+  /* styles to apply when screen width is 768px or wider */
+  .item .songbody {
+    font-size: 10px;
+  }
+  .wrapper .item{
+    width:40vw;
+    height:300px;
+    /* display: flex; */
+    /* flex-direction: column; */
+    border: 1px solid black; 
+    border-radius: 8px;
+    margin-left: 10px;
+  }
+  .item img{
+    max-width: 100%;
+    max-height: 25%;
+  }
+}
+</style>
+
+{% endblock%}
+
+
+{% block content %}
+<!-- Include Bootstrap CSS -->
+<h1>Popular documentaries</h1>
+<div class="wrapper ">
+  {% for documentary in popular_documentaries %}
+    
+    <div class="item ">
+      <img class="account-img" src="{{ documentary.poster.url }}" alt="image not found">
+        <div class="songbody px-2">
+            <h4>{{ documentary.title }}</h4>
+              <p>Release date: {{ documentary.release_date }}</p>
+              <p>Director: {{ documentary.director }}</p>
+              <p>Rating: {{ documentary.rating }}</p>
+              <div ><i class="fas fa-thumbs-up"></i> {{documentary.total_likes}}</div>
+            </div>
+          <!-- playbutton -->
+          <form action="{% url 'documentary_history'%}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="documentary_id" value="{{documentary.id}}">
+            <button class="btn btn-outline-primary">Play now</button>
+          </form>
+        </div>
+   
+    {% endfor %}
+</div>
+{% if recomendations %}
+<h1>Recommended for you</h1>
+<div class="wrapper ">
+  {% for documentary in recomendations %}
+    
+    <div class="item ">
+      <img class="account-img" src="{{ documentary.poster.url }}" alt="image not found">
+        <div class="songbody px-2">
+            <h4>{{ documentary.title }}</h4>
+              <p>Release date: {{ documentary.release_date }}</p>
+              <p>Director: {{ documentary.director }}</p>
+              <p>Rating: {{ documentary.rating }}</p>
+              <div ><i class="fas fa-thumbs-up"></i> {{documentary.total_likes}}</div>
+            </div>
+          <!-- playbutton -->
+          <form action="{% url 'documentary_history'%}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="documentary_id" value="{{documentary.id}}">
+            <button class="btn btn-outline-primary">Play now</button>
+          </form>
+        </div>
+   
+    {% endfor %}
+</div>
+{% endif %}
+<h1> Recent added </h1>
+<div class="wrapper ">
+  {% for documentary in latest_documentaries %}
+    <div class="item ">
+      <img class="account-img" src="{{ documentary.poster.url }}" alt="image not found">
+        <div class="songbody px-2">
+            <h4>{{ documentary.title }}</h4>
+              <p>Release date: {{ documentary.release_date }}</p>
+              <p>Director: {{ documentary.director }}</p>
+              <p>Rating: {{ documentary.rating }}</p>
+              <div ><i class="fas fa-thumbs-up"></i> {{documentary.total_likes}}</div>
+            </div>
+          <!-- playbutton -->
+          <form action="{% url 'documentary_history'%}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="documentary_id" value="{{documentary.id}}">
+            <button class="btn btn-outline-primary">Play now</button>
+          </form>
+        </div>
+    
+    {% endfor %}
+</div>
+<h1> Recent Played </h1>
+<div class="wrapper ">
+  {% for i in recent_played %}
+    <div class="item ">
+      <img class="account-img" src="{{ i.documentary.poster.url }}" alt="image not found">
+        <div class="songbody px-2">
+            <h4>{{ i.documentary.title }}</h4>
+              <p>Release date: {{ i.documentary.release_date }}</p>
+              <p>Director: {{ i.documentary.director }}</p>
+              <p>Rating: {{ i.documentary.rating }}</p>
+              <div ><i class="fas fa-thumbs-up"></i> {{i.documentary.total_likes}}</div>
+            </div>
+          <!-- playbutton -->
+          <form action="{% url 'documentary_history'%}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="i.documentary_id" value="{{i.documentary.id}}">
+            <button class="btn btn-outline-primary">Play now</button>
+          </form>
+        </div>
+    
+    {% endfor %}
+</div>
+<div>
+  {% for category in categorys %}
+    <h4>{{category.name}}</h4>
+    <div class="wrapper ">
+  {% for documentary in category.documentary_set.all %}
+        <div class="item ">
+          <img class="account-img" src="{{ documentary.poster.url }}" alt="image not found">
+            <div class="songbody px-2">
+                <h4>{{ documentary.title }}</h4>
+                  <p>Release date: {{ documentary.release_date }}</p>
+                  <p>Director: {{ documentary.director }}</p>
+                  <p>Rating: {{ documentary.rating }}</p>
+                  <div ><i class="fas fa-thumbs-up"></i> {{documentary.total_likes}}</div>
+                </div>
+              <!-- playbutton -->
+            <form action="{% url 'documentary_history'%}" method="post">
+              {% csrf_token %}
+              <input type="hidden" name="documentary_id" value="{{documentary.id}}">
+              <button class="btn btn-outline-primary">Play now</button>
+            </form>
+            </div>
+        {% endfor %}
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

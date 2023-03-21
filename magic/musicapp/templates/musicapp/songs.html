@@ -31,11 +31,10 @@
 {% endblock%}
 {% block content %}
 <!-- Include Bootstrap CSS -->
-<h1>Popular songs </h1>
+<h3>Popular songs </h3>
 <div class="wrapper ">
   
     {% for song in popular_songs %}
-    <a href="{% url 'play_song' pk=song.pk %}" class="text-white"> 
     <div class="item ">
         <img src="{{song.album.image.url}}" alt="{{song.title}}" class="song-image">
         <div class="songbody">
@@ -50,16 +49,51 @@
           </div>
 
         </div>
+        <form action="{% url 'song_history'%}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="song_id" value="{{song.id}}">
+          <button class="btn btn-outline-primary">Play now</button>
+        </form>
     </div>
-    </a>
+   
     {% endfor %}
 
 </div>
+
+{% if recomendations %}
+<h3>Recommended for you  </h3>
+<div class="wrapper ">
+    {% for song in recomendations %}
+    <div class="item ">
+        <img src="{{song.album.image.url}}" alt="{{song.title}}" class="song-image">
+        <div class="songbody">
+          <div class="text-left p-2">
+            <div>Title: {{song.title}}</div>
+            <div>Artist: {% for artist in song.artists.all %}
+              {{artist}}
+              {%endfor%}
+            </div>
+            <div ><i class="fas fa-thumbs-up"></i> {{song.total_likes}}</div>
+
+          </div>
+
+        </div>
+        <form action="{% url 'song_history'%}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="song_id" value="{{song.id}}">
+          <button class="btn btn-outline-primary">Play now</button>
+        </form>
+    </div>
+   
+    {% endfor %}
+
+</div>
+{% endif %}
 <h1> Recent added </h1>
 <div class="wrapper ">
   
   {% for song in latest_songs %}
-  <a href="{% url 'play_song' pk=song.pk %}" class="text-white"> 
+ 
   <div class="item ">
       <img src="{{song.album.image.url}}" alt="{{song.title}}" class="song-image">
       <div class="songbody">
@@ -74,21 +108,27 @@
         </div>
 
       </div>
+      <form action="{% url 'song_history'%}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="song_id" value="{{song.id}}">
+        <button class="btn btn-outline-primary">Play now</button>
+      </form>
   </div>
-  </a>
+ 
   {% endfor %}
 
 </div>
-<h1>Rap songs</h1>
+<h1> Recent Played </h1>
 <div class="wrapper ">
-  {% for song in rap_songs %}
-  <a href="{% url 'play_song' pk=song.pk %}" class="text-white"> 
+  
+  {% for i in recent_played %}
+ 
   <div class="item ">
-      <img src="{{song.album.image.url}}" alt="{{song.title}}" class="song-image">
+      <img src="{{i.song.album.image.url}}" alt="{{i.song.title}}" class="song-image">
       <div class="songbody">
         <div class="text-left p-2">
-          <div>Title: {{song.title}}  {{ song.genre }}</div>
-          <div>Artist: {% for artist in song.artists.all %}
+          <div>Title: {{i.song.title}}{{ i.song.created_at }}</div>
+          <div>Artist: {% for artist in i.song.artists.all %}
             {{artist}}
             {%endfor%}
           </div>
@@ -97,35 +137,48 @@
         </div>
 
       </div>
+      <form action="{% url 'song_history'%}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="song_id" value="{{song.id}}">
+        <button class="btn btn-outline-primary">Play now</button>
+      </form>
   </div>
-  </a>
+ 
   {% endfor %}
 
 </div>
-<h2>
-  Romatic songs
-</h2>
-<div class="wrapper ">
-  {% for song in romatic_songs %}
-  <a href="{% url 'play_song' pk=song.pk %}" class="text-white"> 
-  <div class="item ">
-      <img src="{{song.album.image.url}}" alt="{{song.title}}" class="song-image">
-      <div class="songbody">
-        <div class="text-left p-2">
-          <div>Title: {{song.title}}  {{ song.genre }}</div>
-          <div>Artist: {% for artist in song.artists.all %}
-            {{artist}}
-            {%endfor%}
+
+  {% for genre in genres %}
+    <h4>{{genre.name}}</h4>
+    <div class="wrapper ">
+  
+      {% for song in genre.songsgenre.all %}
+      <div class="item ">
+          <img src="{{song.album.image.url}}" alt="{{song.title}}" class="song-image">
+          <div class="songbody">
+            <div class="text-left p-2">
+              <div>Title: {{song.title}}</div>
+              <div>Artist: {% for artist in song.artists.all %}
+                {{artist}}
+                {%endfor%}
+              </div>
+              <div ><i class="fas fa-thumbs-up"></i> {{song.total_likes}}</div>
+  
+            </div>
+  
           </div>
-          <div ><i class="fas fa-thumbs-up"></i> {{song.total_likes}}</div>
-
-        </div>
-
+          <form action="{% url 'song_history'%}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="song_id" value="{{song.id}}">
+            <button class="btn btn-outline-primary">Play now</button>
+          </form>
       </div>
+     
+      {% endfor %}
+  
   </div>
-  </a>
   {% endfor %}
 
-</div>
+
 
 {% endblock %}

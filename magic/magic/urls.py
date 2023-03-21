@@ -4,13 +4,17 @@ from user import views as user_views
 from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
+from basepage.views import searchView
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('basepage.urls')),
+    path('search/',searchView, name='search'),
     path("music/",include('musicapp.urls')),
     path("movies/",include('movieapp.urls')),
+    path("museums/",include('virtualtour.urls')),
+    path("documentary/",include('documentriesapp.urls')),
     path('plans/',include('subscriptions.urls')),
     path('login/',auth_views.LoginView.as_view(template_name='user/login.html'),name='login'),
     path('logout/',auth_views.LogoutView.as_view(template_name='user/logout.html'),name='logout'),

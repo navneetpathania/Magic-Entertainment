@@ -35,21 +35,16 @@ video {
         <div class="card mb-3">
           <div class="card-header">
             <h5 class="card-title">{{ movie.title }}</h5>
-            <!-- <h6 class="card-subtitle mb-2 text-muted">
-                {% for artist in movie.artists.all %}
-                {{artist}}
-              
-                {%endfor%}</h6> -->
-            <span class="text-right"> <a href="{% url 'movie_download' movie.pk %}"><i class="fa fa-download fa-2xl" aria-hidden="true"></i></a>
-                </span>
+            <!-- <span class="text-right"> <a href="{% url 'movie_download' movie.pk %}"><i class="fa fa-download fa-2xl" aria-hidden="true"></i></a>
+                </span> -->
+              <a href="" class="btn btn-sm btn-primary"> Mark Favourate</a>
           </div>
           <div class="card-body">
             <div class="row">
               <div class="col-md-4">
-                <!-- <img class="img-fluid rounded" src="{{ movie.album.image.url }}" alt="{{ movie.album.name }}"> -->
               </div>
               <div class="col-md-8">
-                <video width="400" controls>
+                <video controls>
                     <source src="{{ movie.video_file.url }}" type="video/mp4">
                     Your browser does not support HTML video.
                   </video>
@@ -61,4 +56,16 @@ video {
       </div>
     </div>
   </div>
+  <script>
+    const video = document.getElementById('my-video');
+  const seekAmount = 5; // seek forward/backward by 5 seconds
+  
+  document.addEventListener('keydown', (event) => {
+    if (event.keyCode === 37) { // left arrow
+      video.currentTime -= seekAmount;
+    } else if (event.keyCode === 39) { // right arrow
+      video.currentTime += seekAmount;
+    }
+  });
+  </script>
 {% endblock %}

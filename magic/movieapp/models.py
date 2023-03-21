@@ -30,11 +30,21 @@ class Movie(models.Model):
     rating = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)], default=1)
     poster = models.ImageField(upload_to='movie_posters/')
     video_file = models.FileField(upload_to='movies/')
-    genres = models.ManyToManyField(Genre)
-    actors = models.ManyToManyField(Actor)
+    genres = models.ForeignKey(Genre,related_name='movies',on_delete=models.CASCADE, null=True)
+    actors = models.ManyToManyField(Actor,related_name='actors')
     subscription_only = models.BooleanField(default=False)
     total_likes = models.IntegerField(default=0)
     liked_by = models.ManyToManyField(User)
+    fav = models.ManyToManyField(User,null=True, related_name='userfavmovie')
     created_at = models.DateTimeField(default=now)
     def __str__(self):
         return self.title
+
+
+class History(models.Model):
+    movie = models.ForeignKey(Movie,on_delete=models.CASCADE, null=True, related_name='moviehistory')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='usermoviehistory')
+
+    def __str__(self):
+        return self.movie.title
+

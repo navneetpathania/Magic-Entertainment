@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'subscriptions',
     'movieapp',
     'musicapp',
+    'documentriesapp',
+    'virtualtour',
     'djstripe',# removeme
    
 ]

@@ -1,0 +1,11 @@
+{% extends 'basepage/base.html'%}
+{% block content %}
+{% for museum in museums %}
+   <h1> {{museum.name}}</h1>
+    <p>{{museum.description}}</p>
+    <iframe class="ku-embed" frameborder="0" allow="xr-spatial-tracking; gyroscope; accelerometer" 
+    allowfullscreen scrolling="no" 
+    src={{museum.url}}>
+    </iframe>
+{% endfor %}
+{% endblock %}

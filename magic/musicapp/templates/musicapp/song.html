@@ -53,6 +53,14 @@ audio {
                   <source src="{{ song.audio_file.url }}" type="audio/mpeg">
                 </audio>
               </div>
+              {%if prev_song.id != none %}
+            
+              <a href="{% url 'play_song' pk=prev_song.id %} " class="btn btn-primary p-2 m-2">Previous Song</a>
+              {% endif %}
+              
+              {%if next_song.id != none %}
+              <a href="{% url 'play_song' pk=next_song.id %}" class="btn btn-success p-2 m-2">Next Song</a>
+              {% endif %}
             </div>
           </div>
         </div>

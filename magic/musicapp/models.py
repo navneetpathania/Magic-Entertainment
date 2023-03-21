@@ -28,7 +28,7 @@ class Song(models.Model):
     duration = models.DurationField()
     album = models.ForeignKey(Album, null=True, on_delete=models.CASCADE, related_name='songs')
     artists = models.ManyToManyField(Artist)
-    genre = models.ForeignKey(Genre, null=True, blank=True, on_delete=models.CASCADE)
+    genre = models.ForeignKey(Genre, null=True, blank=True, on_delete=models.CASCADE,related_name='songsgenre')
     audio_file = models.FileField(upload_to='songs/')
     subscription_only = models.BooleanField(default=False)
     total_likes = models.IntegerField(default=0)
@@ -37,5 +37,11 @@ class Song(models.Model):
     def __str__(self):
         return f'{self.title}'
 
+class History(models.Model):
+    song = models.ForeignKey(Song,on_delete=models.CASCADE, related_name='songhistory')
+    user = models.ForeignKey(User, on_delete=models.CASCADE,related_name='usersonghistory')
+
+    def __str__(self):
+        return self.song.title
 
 

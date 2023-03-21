@@ -1,71 +1,260 @@
 
-
 {% extends 'basepage/base.html' %}
 {%block style%}
 <style>
   .wrapper{
-    height:auto;
+    /* height:auto; */
     display: flex;
     overflow-x:auto;
+    flex-direction: row;
+    /* justify-content: space-evenly; */
   }
   .wrapper::-webkit-scrollbar{
     width:0;
   }
   .wrapper .item{
-    /* display: flex; */
-    width:20vw;
-    height: auto;
-    text-align: center;
-    margin-right:10px;
+    min-width:30vw;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
     border: 1px solid black; 
     border-radius: 8px;
-    
+    margin-left: 10px;
   }
-  .song-image{
-    width:20vw;
-    /* height: 50%; */
+
+  .item img{
+    max-width: 100%;
+    max-height: 37%;
+
   }
-  a {
-    color: white;
-    text-decoration: none;
+.item .songbody{
+  text-align: left;
+  justify-content: space-between;
+}
+
+@media screen and (max-width: 768px) {
+  /* styles to apply when screen width is 768px or wider */
+  .item .songbody {
+    font-size: 10px;
   }
+  .wrapper .item{
+    width:40vw;
+    height:300px;
+    /* display: flex; */
+    /* flex-direction: column; */
+    border: 1px solid black; 
+    border-radius: 8px;
+    margin-left: 10px;
+  }
+  .item img{
+    max-width: 100%;
+    max-height: 25%;
+  }
+}
+
+.section-div{
+    /* height:auto; */
+    display: flex;
+    overflow-x:auto;
+    flex-direction: row;
+    background-color: red;
+  }
+  .section-div::-webkit-scrollbar{
+    width:0;
+  }
+  .subsection-div{
+    min-width:300px;
+    min-height: 175px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black; 
+    border-radius: 8px;
+    margin-left: 10px;
+    background-color: green;
+    transition: all 0.3s ease-in-out;
+
+  }
+  .image-div{
+    min-width: 100%;
+    min-height: 100%;
+  }
+  .imaeg-div img{
+    width: 300px;
+    height: 175px;
+  }
+  .body-div{
+    display: none;
+  }
+  /* .subsection-div:hover {
+    min-height: 300px;
+    z-index: 1;
+  } */
 </style>
+
 {% endblock%}
 
 
 {% block content %}
+
+<!-- <div class="section-div mt-2">
+  {% for movie in popular_movies %}
+  <div class="subsection-div rounded-lg " onclick="growSize(this)">
+    <div class="imaeg-div">
+      <img class="account-img" src="{{ movie.poster.url }}" alt="image not found">
+    </div>
+    <div class="body-div">
+
+      <form action="{% url 'history'%}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="movie_id" value="{{movie.id}}">
+        <button class="btn btn-outline-primary">Play now</button>
+      </form>
+
+      <h4>{{ movie.title }}</h4>
+      <div>
+        <p>{{movie.plot}}</p>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div> -->
+
+
 <!-- Include Bootstrap CSS -->
-<h1>Popular songs </h1>
+<h1>Popular Movies </h1>
 <div class="wrapper ">
-  
-  {% for movie in movies %}
-    <a href="{% url 'play_movie' pk=movie.pk %}" class="text-white"> 
+  {% for movie in popular_movies %}
+ 
     <div class="item ">
-      <img class="account-img" style = 'max-width: 100px'src="{{ movie.image.url }}" alt="image not found">
-        <div class="songbody">
-          <div class="text-left p-2">
-            <h2>{{ movie.title }}</h2>
+      <img class="account-img" src="{{ movie.poster.url }}" alt="image not found">
+        <div class="songbody px-2">
+            <h4>{{ movie.title }}</h4>
               <p>Release date: {{ movie.release_date }}</p>
               <p>Director: {{ movie.director }}</p>
               <p>Rating: {{ movie.rating }}</p>
+              <div ><i class="fas fa-thumbs-up"></i> {{movie.total_likes}}</div>
             </div>
-            <div ><i class="fas fa-thumbs-up"></i> {{movie.total_likes}}</div>
+            <form action="{% url 'history'%}" method="post">
+              {% csrf_token %}
+              <input type="hidden" name="movie_id" value="{{movie.id}}">
+              <button class="btn btn-outline-primary">Play now</button>
+            </form>
+        </div>
+    
+    {% endfor %}
+</div>
 
+{% if recomendations %}
+<h1>Recommended for you </h1>
+<div class="wrapper ">
+  {% for movie in recomendations %}    
+    <div class="item ">
+      <img class="account-img" src="{{ movie.poster.url }}" alt="image not found">
+        <div class="songbody px-2">
+            <h4>{{ movie.title }}</h4>
+              <p>Release date: {{ movie.release_date }}</p>
+              <p>Director: {{ movie.director }}</p>
+              <p>Rating: {{ movie.rating }}</p>
+              <div ><i class="fas fa-thumbs-up"></i> {{movie.total_likes}}</div>
+            </div>
+            <form action="{% url 'history'%}" method="post">
+              {% csrf_token %}
+              <input type="hidden" name="movie_id" value="{{movie.id}}">
+              <button class="btn btn-outline-primary">Play now</button>
+            </form>
+        </div>
+    
+    {% endfor %}
+</div>
+{% endif %}
+
+<h1> Recent added </h1>
+<div class="wrapper ">
+  {% for movie in latest_movies %}
+    
+    <div class="item ">
+      <img class="account-img" src="{{ movie.poster.url }}" alt="image not found">
+        <div class="songbody px-2">
+            <h4>{{ movie.title }}</h4>
+              <p>Release date: {{ movie.release_date }}</p>
+              <p>Director: {{ movie.director }}</p>
+              <p>Rating: {{ movie.rating }}</p>
+              <div ><i class="fas fa-thumbs-up"></i> {{movie.total_likes}}</div>
+            </div>
+            <form action="{% url 'history'%}" method="post">
+              {% csrf_token %}
+              <input type="hidden" name="movie_id" value="{{movie.id}}">
+              <button class="btn btn-outline-primary">Play now</button>
+            </form>
+        </div>
+   
+    {% endfor %}
+</div>
+
+{% if recent_played %}
+<h1> Recent Played </h1>
+<div class="wrapper ">
+  {% for i in recent_played %}
+ 
+  <div class="item ">
+      <img src="{{i.movie.poster.url}}" alt="{{i.movie.title}}" class="song-image">
+      <div class="songbody">
+        <div class="text-left p-2">
+          <div>Title: {{i.movie.title}}{{ i.movie.created_at }}</div>
+          <div>Director: {% for artist in i.movie.director.all %}
+            {{artist}}
+            {%endfor%}
           </div>
+          <div ><i class="fas fa-thumbs-up"></i> {{i.movie.total_likes}}</div>
 
         </div>
-    </div>
-    </a>
-    {% endfor %}
+
+      </div>
+      <form action="{% url 'history'%}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="movie_id" value="{{movie.id}}">
+        <button class="btn btn-outline-primary">Play now</button>
+      </form>
+  </div>
+ 
+  {% endfor %}
 
 </div>
-<h1> Recent added </h1>
-
-<h1>Rap songs</h1>
-
-<h2>
-  Romatic songs
-</h2>
+{% endif %}
 
 
+
+<div>
+  {% for genre in genres %}
+    <h4>{{genre.name}}</h4>
+    
+    <div class="wrapper ">
+      {% for movie in genre.movies.all %}
+        
+        <div class="item ">
+          <img class="account-img" src="{{ movie.poster.url }}" alt="image not found">
+            <div class="songbody px-2">
+                <h4>{{ movie.title }}</h4>
+                  <p>Release date: {{ movie.release_date }}</p>
+                  <p>Director: {{ movie.director }}</p>
+                  <p>Rating: {{ movie.rating }}</p>
+                  <div ><i class="fas fa-thumbs-up"></i> {{movie.total_likes}}</div>
+                </div>
+                <form action="{% url 'history'%}" method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="movie_id" value="{{movie.id}}">
+                  <button class="btn btn-outline-primary">Play now</button>
+                </form>
+            </div>
+        {% endfor %}
+    </div>
+  {% endfor %}
+</div>
+
+<script>
+ function growSize(element){
+  element.style.height = '500px';;
+  console.log(this)
+ }
+</script>
 {% endblock %}
