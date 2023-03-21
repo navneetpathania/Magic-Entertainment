@@ -3,32 +3,50 @@
 {% extends 'basepage/base.html' %}
 {%block style%}
 <style>
-  .wrapper{
+   .wrapper{
     height:auto;
     display: flex;
     overflow-x:auto;
   }
   .wrapper::-webkit-scrollbar{
-    width:0;
+    width:10px;
   }
   .wrapper .item{
     /* display: flex; */
-    width:20vw;
+    width: 18vw;
     height: auto;
-    text-align: center;
+    text-align: left;
     margin-right:10px;
     border: 1px solid black; 
     border-radius: 8px;
     
   }
   .song-image{
-    width:20vw;
-    /* height: 50%; */
+    width: 18vw;
+    height: 12vw;
+    border-radius: 8px;
   }
   a {
     color: white;
     text-decoration: none;
   }
+  h1 {
+    font-size: 1.5rem;
+    font-family: poppins;
+}
+h4 {
+    color: rgba(90, 90, 90, 0.75);
+    font-family: poppins;
+    font-size: 1.0rem;
+}
+.songbody {
+  color: black;
+  background-color: white;
+  text-align: left;
+  font-family: poppins;
+  font-size: 0.5rem;
+}
+
 </style>
 {% endblock%}
 
@@ -39,17 +57,16 @@
 <div class="wrapper ">
   
   {% for movie in movies %}
-    <a href="{% url 'play_movie' pk=movie.pk %}" class="text-white"> 
-    <div class="item ">
-      <img class="account-img" style = 'max-width: 100px'src="{{ movie.image.url }}" alt="image not found">
+    <a href="#" class="text-white"> 
+    <div class="item">
+      <img class="song-image" src="{{ movie.poster.url }}" alt="image not found">
         <div class="songbody">
           <div class="text-left p-2">
-            <h2>{{ movie.title }}</h2>
-              <p>Release date: {{ movie.release_date }}</p>
-              <p>Director: {{ movie.director }}</p>
-              <p>Rating: {{ movie.rating }}</p>
+           <div><h1>{{ movie.title }}</h1></div>
+              <h4>Rating: {{ movie.rating }}</h4>
+              <h4><i class="fas fa-thumbs-up" style="color:green;"></i> {{movie.total_likes}}</h4>
             </div>
-            <div ><i class="fas fa-thumbs-up"></i> {{movie.total_likes}}</div>
+            
 
           </div>
 

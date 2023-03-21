@@ -29,34 +29,54 @@ audio {
 </style>
 {% endblock %}
 {% block content %}
-  <div class="container align-center">
-    <div class="row">
-      <div class="col-md-8 offset-md-2">
-        <div class="card mb-3">
-          <div class="card-header">
-            <h5 class="card-title">{{ song.title }}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">
-                {% for artist in song.artists.all %}
-                {{artist}}
-              
-                {%endfor%}</h6>
-            <span class="text-right"> <a href="{% url 'song_download' song.pk %}"><i class="fa fa-download fa-2xl" aria-hidden="true"></i></a>
-                </span>
-          </div>
-          <div class="card-body">
-            <div class="row">
-              <div class="col-md-4">
-                <img class="img-fluid rounded" src="{{ song.album.image.url }}" alt="{{ song.album.name }}">
+<div class="container">
+  <div class="card">
+      <div class="container-fliud">
+          <div class="wrapper row">
+              <div class="preview col-md-5">
+
+                  <div class="preview-pic tab-content">
+                      <div class="tab-pane active"><img src="{{ song.album.image.url }}" height="250" width="250"
+                              style="padding:40px;border-radius: 60px 60px 60px 60px;"></div>
+                  </div>
+
               </div>
-              <div class="col-md-8">
-                <audio controls>
-                  <source src="{{ song.audio_file.url }}" type="audio/mpeg">
-                </audio>
-              </div>
-            </div>
+              <div class="details col-md-6">
+                  <br>
+                  <h3 class="product-title">{{ song.title }}</h3>
+                  <h6>Album: {{song.album}}</h6>
+                  <h6>Singer:  {% for artist in song.artists.all %}
+              {{artist}}
+            
+              {%endfor%}</h6>
+                  <h6>Release Year: {{ song.release_date }}</h6>
+                  <h6>Likes: {{ song.total_likes }}</h6>
+                  <br>
+                  <!-- <audio controls>
+                      <source src="{{ songs.song_file.url }}" type="audio/mpeg">
+                  </audio>   -->
+
+                      <button type="button" class="btn btn-primary" href="{% url 'song_download' song.pk %}"><i class="fa fa-download" aria-hidden="true"></i> Download</button>
+                      
+                </button>
+
+                         <br/><br/>
+                       
+      
+    
+          <div class="bottom">
+              <audio controls="" _autoplay="" name="media"
+                  style="margin-left: 20px; margin-bottom: 10px;width: 250px; height: 30px">
+                  <source src="{{ song.audio_file.url }}" type="audio/mpeg"></audio>
           </div>
-        </div>
-      </div>
-    </div>
+      
   </div>
+
+
+
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
 {% endblock %}

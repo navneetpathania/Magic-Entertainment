@@ -25,12 +25,35 @@
     />
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+   
 
     
     {% block style%} {% endblock %}
-    <title>base page</title>
+    <title>Magic Show Entertainment</title>
+  <style>
+.collapse .navbar-collapse {
+  background-color: #252e39;
+}
+  .btn-info {
+  font-family: poppins;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.75);
+  letter-spacing: 1px;
+  line-height: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: 40px;
+  background: rgba(0, 229, 255, 0.75);
+  transition: all 0.3s ease 0s;
+  }
+
+
+.btn-info a {
+  color: white;
+}
+    </style>
   </head>
   <body>
+<nav>
     <div class="container-fluid">
       <div class="row">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark col-md-12">
@@ -52,6 +75,7 @@
 
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
+
               <li class="nav-item active">
                 <a class="nav-link" href="{% url 'home'%}"
                   >Home <span class="sr-only">(current)</span></a
@@ -98,24 +122,20 @@
             {%else %}
             <ul class="navbar-nav">
               <li>
-                <a href="{%url 'login'%}">Login</a>
+                <button class="btn btn-info"><a href="{%url 'login'%}">Login</a></button>
               </li>
             </ul>
-            {% endif %}
-            <form class="form-inline my-2 my-lg-0">
-              <input
-                class="form-control rounded-pill mr-sm-2"
-                type="search"
-                placeholder="Search"
-                aria-label="Search"
-              />
-              <button class="search text-white my-2 my-sm-0" type="submit">
+            {% endif %} 
+              <div class="search">
+              <input type="text" placeholder="Search"/>
                 <i class="fas fa-search"></i>
-              </button>
-            </form>
+              </div>
           </div>
         </nav>
-      </div>
+        </div>
+        </div>
+        </nav>
+      
 
       <main>
         <div class="row">
