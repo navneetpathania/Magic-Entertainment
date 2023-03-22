@@ -85,10 +85,11 @@
   .body-div{
     display: none;
   }
-  /* .subsection-div:hover {
-    min-height: 300px;
-    z-index: 1;
-  } */
+ /* css for ajax like and displike */
+ .liked {
+  color: blue;
+}
+
 </style>
 
 {% endblock%}
@@ -132,7 +133,11 @@
               <p>Release date: {{ movie.release_date }}</p>
               <p>Director: {{ movie.director }}</p>
               <p>Rating: {{ movie.rating }}</p>
-              <div ><i class="fas fa-thumbs-up"></i> {{movie.total_likes}}</div>
+              {% if movie in liked %}
+              <div ><button class="like-button text-primary" data-movie-id="{{ movie.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{movie.liked_by.all.count}}</i>  </button></div>
+              {% else %}
+              <div ><button class="like-button" data-movie-id="{{ movie.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{movie.liked_by.all.count}}</i>  </button></div>
+              {%  endif %}
             </div>
             <form action="{% url 'history'%}" method="post">
               {% csrf_token %}
@@ -144,6 +149,40 @@
     {% endfor %}
 </div>
 
+<!-- favorite section -->
+{% if user.userfavmovie.all.count > 0 %}
+<h1>Favorite Movies </h1>
+<div class="wrapper ">
+  
+    
+  
+  {% for movie in user.userfavmovie.all %}
+ 
+    <div class="item ">
+      <img class="account-img" src="{{ movie.poster.url }}" alt="image not found">
+        <div class="songbody px-2">
+            <h4>{{ movie.title }}</h4>
+              <p>Release date: {{ movie.release_date }}</p>
+              <p>Director: {{ movie.director }}</p>
+              <p>Rating: {{ movie.rating }}</p>
+              {% if movie in liked %}
+              <div ><button class="like-button text-primary" data-movie-id="{{ movie.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{movie.liked_by.all.count}}</i>  </button></div>
+              {% else %}
+              <div ><button class="like-button" data-movie-id="{{ movie.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{movie.liked_by.all.count}}</i>  </button></div>
+              {%  endif %}
+            </div>
+            <form action="{% url 'history'%}" method="post">
+              {% csrf_token %}
+              <input type="hidden" name="movie_id" value="{{movie.id}}">
+              <button class="btn btn-outline-primary">Play now</button>
+            </form>
+        </div>
+    
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- recommended section -->
 {% if recomendations %}
 <h1>Recommended for you </h1>
 <div class="wrapper ">
@@ -155,7 +194,11 @@
               <p>Release date: {{ movie.release_date }}</p>
               <p>Director: {{ movie.director }}</p>
               <p>Rating: {{ movie.rating }}</p>
-              <div ><i class="fas fa-thumbs-up"></i> {{movie.total_likes}}</div>
+              {% if movie in liked %}
+              <div ><button class="like-button text-primary" data-movie-id="{{ movie.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{movie.liked_by.all.count}}</i>  </button></div>
+              {% else %}
+              <div ><button class="like-button" data-movie-id="{{ movie.id }}"> <i class="fas fa-thumbs-up total-likes "  >{{movie.liked_by.all.count}}</i>  </button></div>
+              {%  endif %}
             </div>
             <form action="{% url 'history'%}" method="post">
               {% csrf_token %}
@@ -179,7 +222,11 @@
               <p>Release date: {{ movie.release_date }}</p>
               <p>Director: {{ movie.director }}</p>
               <p>Rating: {{ movie.rating }}</p>
-              <div ><i class="fas fa-thumbs-up"></i> {{movie.total_likes}}</div>
+              {% if movie in liked %}
+              <div ><button class="like-button text-primary" data-movie-id="{{ movie.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{movie.liked_by.all.count}}</i>  </button></div>
+              {% else %}
+              <div ><button class="like-button" data-movie-id="{{ movie.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{movie.liked_by.all.count}}</i>  </button></div>
+              {%  endif %}
             </div>
             <form action="{% url 'history'%}" method="post">
               {% csrf_token %}
@@ -205,7 +252,11 @@
             {{artist}}
             {%endfor%}
           </div>
-          <div ><i class="fas fa-thumbs-up"></i> {{i.movie.total_likes}}</div>
+          {% if movie in liked %}
+            <div ><button class="like-button text-primary" data-movie-id="{{ i.movie.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{i.movie.total_likes}}</i>  </button></div>
+          {% else %}
+            <div ><button class="like-button" data-movie-id="{{ i.movie.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{i.movie.total_likes}}</i>  </button></div>
+          {%  endif %}
 
         </div>
 
@@ -238,7 +289,11 @@
                   <p>Release date: {{ movie.release_date }}</p>
                   <p>Director: {{ movie.director }}</p>
                   <p>Rating: {{ movie.rating }}</p>
-                  <div ><i class="fas fa-thumbs-up"></i> {{movie.total_likes}}</div>
+                  {% if movie in liked %}
+                  <div ><button class="like-button text-primary" data-movie-id="{{ movie.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{movie.liked_by.all.count}}</i>  </button></div>
+                  {% else %}
+                  <div ><button class="like-button" data-movie-id="{{ movie.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{movie.liked_by.all.count}}</i>  </button></div>
+                  {%  endif %}
                 </div>
                 <form action="{% url 'history'%}" method="post">
                   {% csrf_token %}
@@ -250,11 +305,37 @@
     </div>
   {% endfor %}
 </div>
-
+{% block script%} 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
- function growSize(element){
-  element.style.height = '500px';;
-  console.log(this)
- }
-</script>
+  $(document).ready(function() {
+   $('.like-button').off('click').on('click', function() {
+     var movieId = $(this).data('movie-id');
+     var likeButton = $(this);
+     $.ajax({
+       url: "{% url 'like_dislike' %}",
+       dataType: 'json',
+       data: { 'movie_id': movieId },
+       success: function(response) {
+         // update the like count
+         likeButton.find('.total-likes').text(response.total_likes);
+         if (response.liked) {
+          likeButton.addClass('liked');
+        } else {
+          likeButton.removeClass('liked');
+        }
+         
+       },
+     });
+   });
+ });
+ 
+ </script>
+ <script>
+  $(document).ready(function(){
+    $('.like-button').addClass("btn btn-outline-secondary btn-sm")
+  });
+ </script>
+{% endblock %}
+
 {% endblock %}

@@ -33,7 +33,7 @@ class Movie(models.Model):
     genres = models.ForeignKey(Genre,related_name='movies',on_delete=models.CASCADE, null=True)
     actors = models.ManyToManyField(Actor,related_name='actors')
     subscription_only = models.BooleanField(default=False)
-    total_likes = models.IntegerField(default=0)
+    total_likes = models.IntegerField(validators=[MinValueValidator(0)])
     liked_by = models.ManyToManyField(User)
     fav = models.ManyToManyField(User,null=True, related_name='userfavmovie')
     created_at = models.DateTimeField(default=now)

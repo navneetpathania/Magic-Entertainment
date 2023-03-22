@@ -26,10 +26,11 @@ video {
   margin-top: 1rem;
 }
 
+
 </style>
 {% endblock %}
 {% block content %}
-  <div class="container align-center">
+  <div class="container align-center mt-5">
     <div class="row">
       <div class="col-md-8 offset-md-2">
         <div class="card mb-3">
@@ -37,7 +38,16 @@ video {
             <h5 class="card-title">{{ movie.title }}</h5>
             <!-- <span class="text-right"> <a href="{% url 'movie_download' movie.pk %}"><i class="fa fa-download fa-2xl" aria-hidden="true"></i></a>
                 </span> -->
-              <a href="" class="btn btn-sm btn-primary"> Mark Favourate</a>
+                <form action="{% url 'mark_as_favorite' %}" method="post">
+                  {% csrf_token %}
+                  <input type="hidden" value="{{movie.id}}" name="movie_id">
+                  {% if is_favorite %}
+                    <button  type="submit" class="text-danger btn  btn-outline-secondary"><i class="fas fa-heart" id="unfavorite-icon"></i></button>
+                  {% else %}
+                    <button  type="submit" class="text-secondary btn btn-outline-danger"><i class="far fa-heart" id="favorite-icon"></i></button>
+                  {% endif %}
+                </form>
+              
           </div>
           <div class="card-body">
             <div class="row">
@@ -48,7 +58,7 @@ video {
                     <source src="{{ movie.video_file.url }}" type="video/mp4">
                     Your browser does not support HTML video.
                   </video>
-                  <a href="{% url 'movie_download' movie.pk %}"><i class="fa fa-download fa-2xl" aria-hidden="true"></i></a>
+                  <!-- <a href="{% url 'movie_download' movie.pk %}"><i class="fa fa-download fa-2xl" aria-hidden="true"></i></a> -->
               </div>
             </div>
           </div>
@@ -56,16 +66,5 @@ video {
       </div>
     </div>
   </div>
-  <script>
-    const video = document.getElementById('my-video');
-  const seekAmount = 5; // seek forward/backward by 5 seconds
   
-  document.addEventListener('keydown', (event) => {
-    if (event.keyCode === 37) { // left arrow
-      video.currentTime -= seekAmount;
-    } else if (event.keyCode === 39) { // right arrow
-      video.currentTime += seekAmount;
-    }
-  });
-  </script>
 {% endblock %}

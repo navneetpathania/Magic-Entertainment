@@ -3,6 +3,8 @@ from django.http import FileResponse
 from .models import Documentary, Category, History
 from django.db.models import Count,Q
 from collections import Counter
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 def documentary_list(request):
     documentaries = Documentary.objects.all()
@@ -12,10 +14,11 @@ def documentary_list(request):
     history_obj = History.objects.filter(user=request.user)
     obj = reversed(history_obj)
     most_common_category = documentary_suggestion(request)
+    liked = Documentary.objects.filter(liked_by=request.user)
     recomendations = Documentary.objects.filter(Q(category__name__in=most_common_category)).exclude(documentaryhistory__user=request.user)[:10]
     return render(request, 'documentariesapp/documentary_list.html', {'documentaries': documentaries, 'popular_documentaries':popular_documentaries, 
     'latest_documentaries':latest_documentaries, 'categorys':categorys, 'recent_played':obj, 
-    'recomendations':recomendations})
+    'recomendations':recomendations,'liked':liked})
 
 def documentary_suggestion(request):
     user = request.user
@@ -33,7 +36,15 @@ def documentary_download(request, pk):
 
 def play_documentary(request, pk):
     documentary = get_object_or_404(Documentary, pk=pk)
-    return render(request, 'documentariesapp/documentary.html',{"documentary":documentary})
+    user = request.user
+    favs = user.userfavdocumentray.all()
+    if documentary in favs:
+        # movie exists in favorites
+        is_favorite = True
+    else:
+        # movie doesn't exist in favorites
+        is_favorite = False
+    return render(request, 'documentariesapp/documentary.html',{"documentary":documentary, "is_favorite":is_favorite})
 
 def historyView(request):
     if request.method == "POST":
@@ -53,3 +64,58 @@ def historyView(request):
         documentaries.append(i.documentary)
     # documentaries = documentary.objects.filter(id__in=documentaries)
     return render(request,'documentaryapp/history.html', {"history":documentaries})
+
+@login_required
+def mark_as_favorite(request):
+    documentary_id = request.POST['documentary_id']
+    documentary = get_object_or_404(Documentary, id=documentary_id)
+    # favorite, created = Favorite.objects.get_or_create(documentary=documentary, user=request.user)
+    is_fav = Documentary.objects.filter(fav=request.user, id=documentary_id).exists()
+    if is_fav:
+        documentary.fav.remove(request.user)
+        documentary.save()
+        
+        messages.warning(request, 'Documentary removed from favorites')
+    else:
+        
+        documentary.fav.add(request.user)
+        documentary.save()
+        
+        messages.success(request, 'Documentary added to favorites.')
+
+    return redirect(f'/documentary/play_documentary/{documentary_id}')
+from django.http import JsonResponse
+
+@login_required
+def like_dislike(request):
+    documentary_id = request.GET.get('documentary_id')    
+    documentary = Documentary.objects.get(id=documentary_id)
+    user = request.user
+    liked = Documentary.objects.filter(liked_by=request.user, id=documentary_id).exists()
+    if not liked:
+        # documentary.total_likes +=1
+        documentary.liked_by.add(request.user)
+        documentary.save()
+        documentary = Documentary.objects.get(id=documentary_id)
+        
+        total_likes = documentary.liked_by.all().count()
+        documentary.total_likes = total_likes
+        documentary.save()
+
+        response = {
+        "total_likes": total_likes, "liked":True
+        }
+        return JsonResponse(response)
+    else:
+        # documentary.total_likes -=1
+        documentary.liked_by.remove(request.user)
+        documentary.save()
+        documentary = Documentary.objects.get(id=documentary_id)
+        total_likes = documentary.liked_by.all().count()
+        documentary.total_likes = total_likes
+        documentary.save()
+        response = {
+        "total_likes": total_likes, "liked":False
+        }
+    
+        return JsonResponse(response)

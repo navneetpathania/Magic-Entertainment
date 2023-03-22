@@ -26,8 +26,9 @@ class Documentary(models.Model):
     release_date = models.DateField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     subscription_only = models.BooleanField(default=False)
-    total_likes = models.IntegerField(default=0)
+    total_likes = models.IntegerField(validators=[MinValueValidator(0)])
     liked_by = models.ManyToManyField(User)
+    fav = models.ManyToManyField(User,null=True, related_name='userfavdocumentray')
     created_at = models.DateTimeField(default=now)
 
     def __str__(self):

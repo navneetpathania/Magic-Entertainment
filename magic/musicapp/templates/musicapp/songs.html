@@ -27,6 +27,10 @@
     color: white;
     text-decoration: none;
   }
+.liked {
+  color: blue;
+}
+
 </style>
 {% endblock%}
 {% block content %}
@@ -44,7 +48,11 @@
               {{artist}}
               {%endfor%}
             </div>
-            <div ><i class="fas fa-thumbs-up"></i> {{song.total_likes}}</div>
+            {% if song in liked %}
+              <div ><button class="like-button text-primary " data-song-id="{{ song.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{song.liked_by.all.count}}</i>  </button></div>
+              {% else %}
+              <div ><button class="like-button " data-song-id="{{ song.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{song.liked_by.all.count}}</i>  </button></div>
+            {%  endif %}
 
           </div>
 
@@ -73,7 +81,11 @@
               {{artist}}
               {%endfor%}
             </div>
-            <div ><i class="fas fa-thumbs-up"></i> {{song.total_likes}}</div>
+            {% if song in liked %}
+              <div ><button class="like-button text-primary" data-song-id="{{ song.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{song.liked_by.all.count}}</i>  </button></div>
+              {% else %}
+              <div ><button class="like-button" data-song-id="{{ song.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{song.liked_by.all.count}}</i>  </button></div>
+            {%  endif %}
 
           </div>
 
@@ -103,7 +115,11 @@
             {{artist}}
             {%endfor%}
           </div>
-          <div ><i class="fas fa-thumbs-up"></i> {{song.total_likes}}</div>
+          {% if song in liked %}
+              <div ><button class="like-button text-primary" data-song-id="{{ song.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{song.liked_by.all.count}}</i>  </button></div>
+              {% else %}
+              <div ><button class="like-button" data-song-id="{{ song.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{song.liked_by.all.count}}</i>  </button></div>
+            {%  endif %}
 
         </div>
 
@@ -132,7 +148,11 @@
             {{artist}}
             {%endfor%}
           </div>
-          <div ><i class="fas fa-thumbs-up"></i> {{song.total_likes}}</div>
+          {% if song in liked %}
+              <div ><button class="like-button text-primary" data-song-id="{{ i.song.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{i.song.liked_by.all.count}}</i>  </button></div>
+              {% else %}
+              <div ><button class="like-button" data-song-id="{{ i.song.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{i.song.liked_by.all.count}}</i>  </button></div>
+            {%  endif %}
 
         </div>
 
@@ -162,7 +182,11 @@
                 {{artist}}
                 {%endfor%}
               </div>
-              <div ><i class="fas fa-thumbs-up"></i> {{song.total_likes}}</div>
+              {% if song in liked %}
+              <div ><button class="like-button text-primary" data-song-id="{{ song.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{song.liked_by.all.count}}</i>  </button></div>
+              {% else %}
+              <div ><button class="like-button" data-song-id="{{ song.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{song.liked_by.all.count}}</i>  </button></div>
+            {%  endif %}
   
             </div>
   
@@ -179,6 +203,37 @@
   </div>
   {% endfor %}
 
-
+  {% block script%} 
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+     $('.like-button').off('click').on('click', function() {
+       var songId = $(this).data('song-id');
+       var likeButton = $(this);
+       $.ajax({
+         url: "{% url 'song_like_dislike' %}",
+         dataType: 'json',
+         data: { 'song_id': songId },
+         success: function(response) {
+           // update the like count
+           likeButton.find('.total-likes').text(response.total_likes);
+           if (response.liked) {
+            likeButton.addClass('liked');
+          } else {
+            likeButton.removeClass('liked');
+          }
+           
+         },
+       });
+     });
+   });
+   
+   </script>
+   <script>
+    $(document).ready(function(){
+      $('.like-button').addClass("btn btn-outline-secondary btn-sm")
+    });
+   </script>
+  {% endblock %}
 
 {% endblock %}

@@ -279,3 +279,7 @@ div .p-2 {
       display: none;
     }
   }  
+
+  .main-row{
+    margin-top: 300px;
+  }

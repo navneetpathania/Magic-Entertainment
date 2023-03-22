@@ -5,6 +5,8 @@ from subscriptions.models import Subscription
 from django.core.paginator import Paginator
 from django.db.models import Count, Case, When, Q
 from collections import Counter
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 # Create your views here.
 
 def songs_view(request):
@@ -15,9 +17,10 @@ def songs_view(request):
     history_obj = History.objects.filter(user=request.user)
     obj = reversed(history_obj)
     most_common_genres = songs_suggestion(request)
+    liked = Song.objects.filter(liked_by=request.user)
     recomendations = Song.objects.filter(Q(genre__name__in=most_common_genres)).exclude(songhistory__user=request.user)[:10]
     return render(request, 'musicapp/songs.html', {'songs': songs,'popular_songs':popular_songs, 'latest_songs':latest_songs, 'genres':genres,
-    'recent_played':obj, 'recomendations':recomendations})
+    'recent_played':obj,'liked':liked ,'recomendations':recomendations})
 
 def songs_suggestion(request):
     user = request.user
@@ -29,9 +32,17 @@ def songs_suggestion(request):
 
 def play_song(request, pk):
     song = get_object_or_404(Song, pk=pk)
+    user = request.user
+    favs = user.userfavsong.all()
+    if song in favs:
+        # movie exists in favorites
+        is_favorite = True
+    else:
+        # movie doesn't exist in favorites
+        is_favorite = False
     next_song = Song.objects.filter(id__gt=song.id).order_by('id').first()
     prev_song = Song.objects.filter(id__lt=song.id).order_by('-id').first()
-    return render(request, 'musicapp/song.html',{"song":song,'next_song':next_song ,'prev_song':prev_song})
+    return render(request, 'musicapp/song.html',{"song":song,'next_song':next_song ,'prev_song':prev_song,'is_favorite':is_favorite})
 def song_download_view(request, pk):
     song = get_object_or_404(Song, pk=pk)
     file = song.audio_file
@@ -57,3 +68,56 @@ def historyView(request):
         songs.append(i.song)
     # songs = Song.objects.filter(id__in=songs)
     return render(request,'musicapp/history.html', {"history":songs})
+
+from django.http import JsonResponse
+
+def mark_as_favorite(request):
+    song_id = request.POST['song_id']
+    song = get_object_or_404(Song, id=song_id)
+    # favorite, created = Favorite.objects.get_or_create(Song=Song, user=request.user)
+    is_fav = Song.objects.filter(fav=request.user, id=song_id).exists()
+    if is_fav:
+        song.fav.remove(request.user)
+        song.save()
+        
+        messages.warning(request, 'Song removed from favorites')
+    else:
+        # Song.total_likes += 1
+        # Song.liked_by.add(request.user)
+        song.fav.add(request.user)
+        song.save()
+        
+        messages.success(request, 'Song added to favorites.')
+    # return render(request, 'Songapp/Song.html', {'Song':Song,'favorite':fav})
+    return redirect(f'/music/play_song/{song_id}')
+
+def like_dislike(request):
+    song_id = request.GET.get('song_id')    
+    song = Song.objects.get(id=song_id)
+    user = request.user
+    liked = Song.objects.filter(liked_by=request.user, id=song_id).exists()
+    if not liked:
+        
+        song.liked_by.add(request.user)
+        song.save()
+        song = Song.objects.get(id=song_id)
+        total_likes = song.liked_by.all().count()
+        song.total_likes = total_likes
+        song.save()
+        response = {
+        "total_likes": total_likes, "liked":True
+        }
+        return JsonResponse(response)
+    else:
+        
+        song.liked_by.remove(request.user)
+        song.save()
+        song = Song.objects.get(id=song_id)
+        total_likes = song.liked_by.all().count()
+        song.total_likes = total_likes
+        song.save()
+        response = {
+        "total_likes": total_likes, "liked":False
+        }
+    
+        return JsonResponse(response)

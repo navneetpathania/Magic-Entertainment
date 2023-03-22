@@ -40,7 +40,16 @@ audio {
                 {{artist}}
               
                 {%endfor%}</h6>
-            <span class="text-right"> <a href="{% url 'song_download' song.pk %}"><i class="fa fa-download fa-2xl" aria-hidden="true"></i></a>
+                <form action="{% url 'mark_song_as_favorite' %}" method="post">
+                  {% csrf_token %}
+                  <input type="hidden" value="{{song.id}}" name="song_id">
+                  {% if is_favorite %}
+                    <button  type="submit" class="text-danger btn  btn-outline-secondary"><i class="fas fa-heart" id="unfavorite-icon"></i></button>
+                  {% else %}
+                    <button  type="submit" class="text-secondary btn btn-outline-danger"><i class="far fa-heart" id="favorite-icon"></i></button>
+                  {% endif %}
+                </form>
+            <!-- <span class="text-right"> <a href="{% url 'song_download' song.pk %}"><i class="fa fa-download fa-2xl" aria-hidden="true"></i></a> -->
                 </span>
           </div>
           <div class="card-body">

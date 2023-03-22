@@ -51,6 +51,9 @@
     max-height: 25%;
   }
 }
+.liked {
+  color: blue;
+}
 </style>
 
 {% endblock%}
@@ -69,7 +72,11 @@
               <p>Release date: {{ documentary.release_date }}</p>
               <p>Director: {{ documentary.director }}</p>
               <p>Rating: {{ documentary.rating }}</p>
-              <div ><i class="fas fa-thumbs-up"></i> {{documentary.total_likes}}</div>
+              {% if documentary in liked %}
+              <div ><button class="like-button text-primary" data-documentary-id="{{ documentary.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{documentary.liked_by.all.count}}</i>  </button></div>
+              {% else %}
+              <div ><button class="like-button" data-documentary-id="{{ documentary.id }}"> <i class="fas fa-thumbs-up total-likes "  >{{documentary.liked_by.all.count}}</i>  </button></div>
+              {%  endif %}
             </div>
           <!-- playbutton -->
           <form action="{% url 'documentary_history'%}" method="post">
@@ -93,7 +100,11 @@
               <p>Release date: {{ documentary.release_date }}</p>
               <p>Director: {{ documentary.director }}</p>
               <p>Rating: {{ documentary.rating }}</p>
-              <div ><i class="fas fa-thumbs-up"></i> {{documentary.total_likes}}</div>
+              {% if documentary in liked %}
+              <div ><button class="like-button text-primary" data-documentary-id="{{ documentary.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{documentary.liked_by.all.count}}</i>  </button></div>
+              {% else %}
+              <div ><button class="like-button" data-documentary-id="{{ documentary.id }}"> <i class="fas fa-thumbs-up total-likes "  >{{documentary.liked_by.all.count}}</i>  </button></div>
+              {%  endif %}
             </div>
           <!-- playbutton -->
           <form action="{% url 'documentary_history'%}" method="post">
@@ -116,7 +127,11 @@
               <p>Release date: {{ documentary.release_date }}</p>
               <p>Director: {{ documentary.director }}</p>
               <p>Rating: {{ documentary.rating }}</p>
-              <div ><i class="fas fa-thumbs-up"></i> {{documentary.total_likes}}</div>
+              {% if documentary in liked %}
+              <div ><button class="like-button text-primary" data-documentary-id="{{ documentary.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{documentary.liked_by.all.count}}</i>  </button></div>
+              {% else %}
+              <div ><button class="like-button" data-documentary-id="{{ documentary.id }}"> <i class="fas fa-thumbs-up total-likes "  >{{documentary.liked_by.all.count}}</i>  </button></div>
+              {%  endif %}
             </div>
           <!-- playbutton -->
           <form action="{% url 'documentary_history'%}" method="post">
@@ -138,7 +153,11 @@
               <p>Release date: {{ i.documentary.release_date }}</p>
               <p>Director: {{ i.documentary.director }}</p>
               <p>Rating: {{ i.documentary.rating }}</p>
-              <div ><i class="fas fa-thumbs-up"></i> {{i.documentary.total_likes}}</div>
+              {% if documentary in liked %}
+              <div ><button class="like-button text-primary" data-documentary-id="{{ i.documentary.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{i.documentary.liked_by.all.count}}</i>  </button></div>
+              {% else %}
+              <div ><button class="like-button" data-documentary-id="{{ i.documentary.id }}"> <i class="fas fa-thumbs-up total-likes "  >{{i.documentary.liked_by.all.count}}</i>  </button></div>
+              {%  endif %}
             </div>
           <!-- playbutton -->
           <form action="{% url 'documentary_history'%}" method="post">
@@ -162,7 +181,11 @@
                   <p>Release date: {{ documentary.release_date }}</p>
                   <p>Director: {{ documentary.director }}</p>
                   <p>Rating: {{ documentary.rating }}</p>
-                  <div ><i class="fas fa-thumbs-up"></i> {{documentary.total_likes}}</div>
+                  {% if documentary in liked %}
+              <div ><button class="like-button text-primary" data-documentary-id="{{ documentary.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{documentary.liked_by.all.count}}</i>  </button></div>
+              {% else %}
+              <div ><button class="like-button" data-documentary-id="{{ documentary.id }}"> <i class="fas fa-thumbs-up total-likes "  >{{documentary.liked_by.all.count}}</i>  </button></div>
+              {%  endif %}
                 </div>
               <!-- playbutton -->
             <form action="{% url 'documentary_history'%}" method="post">
@@ -175,4 +198,36 @@
     </div>
   {% endfor %}
 </div>
+{% block script %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+   $('.like-button').off('click').on('click', function() {
+     var documentaryId = $(this).data('documentary-id');
+     var likeButton = $(this);
+     $.ajax({
+       url: "{% url 'documentary_like_dislike' %}",
+       dataType: 'json',
+       data: { 'documentary_id': documentaryId },
+       success: function(response) {
+         // update the like count
+         likeButton.find('.total-likes').text(response.total_likes);
+         if (response.liked) {
+          likeButton.addClass('liked');
+        } else {
+          likeButton.removeClass('liked');
+        }
+         
+       },
+     });
+   });
+ });
+ 
+ </script>
+ <script>
+  $(document).ready(function(){
+    $('.like-button').addClass("btn btn-outline-secondary btn-sm")
+  });
+ </script>
+{% endblock %}
 {% endblock %}
