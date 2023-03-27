@@ -1,20 +1,26 @@
 {% extends 'basepage/base.html' %}
 {% block style %}
 <style>
-.container {
+.player-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height:30vh;
+ 
 }
 .card {
   background-color: #333;
   color: #fff;
 }
+.title-div{
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
 
 .card-header {
   font-size: 1.5rem;
 }
+
 .card-subtitle {
   font-size: 1.2rem;
   font-style: italic;
@@ -25,20 +31,17 @@ video {
   margin-top: 1rem;
 }
 
+
 </style>
 {% endblock %}
 {% block content %}
-  <div class="container align-center">
+  <div class="container align-center my-2 player-container">
     <div class="row">
       <div class="col-md-8 offset-md-2">
         <div class="card mb-3">
           <div class="card-header">
-            <h5 class="card-title">{{ documentary.title }}</h5>
-            <!-- <h6 class="card-subtitle mb-2 text-muted">
-                {% for artist in documentary.artists.all %}
-                {{artist}}
-              
-                {%endfor%}</h6> -->
+            <div class="title-div">
+              <h5 class="card-title">{{ documentary.title }}</h5>
                 <form action="{% url 'mark_documentary_as_favorite' %}" method="post">
                   {% csrf_token %}
                   <input type="hidden" value="{{documentary.id}}" name="documentary_id">
@@ -48,14 +51,24 @@ video {
                     <button  type="submit" class="text-secondary btn btn-outline-danger"><i class="far fa-heart" id="favorite-icon"></i></button>
                   {% endif %}
                 </form>
+            </div>
+            <div class="plot card-subtitle ">
+              <p class="text-muted">{{documentary.description}}</p>
+            </div>
+            
           </div>
           <div class="card-body">
             <div class="row">
-              <div class="col-md-4">
-                <img class="img-fluid rounded" src="{{ documentary.poster.url }}" alt="{{ documentary.title }}">
+              <div class="col-sm-4 card-subtitle ">
+                <img src="{{documentary.poster.url}}" width=100% alt="">
+                <div>
+                <p class="text-muted my-1">Released: {{documentary.release_date}}</p>
+                <p class="text-muted my-1">Director: {{documentary.director}}</p>
+              </div>
+                
               </div>
               <div class="col-md-8">
-                <video width="400" controls>
+                <video controls>
                     <source src="{{ documentary.documentray_file.url }}" type="video/mp4">
                     Your browser does not support HTML video.
                   </video>
@@ -66,4 +79,5 @@ video {
       </div>
     </div>
   </div>
+  
 {% endblock %}

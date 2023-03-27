@@ -34,8 +34,8 @@ class Movie(models.Model):
     actors = models.ManyToManyField(Actor,related_name='actors')
     subscription_only = models.BooleanField(default=False)
     total_likes = models.IntegerField(validators=[MinValueValidator(0)])
-    liked_by = models.ManyToManyField(User)
-    fav = models.ManyToManyField(User,null=True, related_name='userfavmovie')
+    liked_by = models.ManyToManyField(User,null=True,blank=True)
+    fav = models.ManyToManyField(User,null=True,blank=True, related_name='userfavmovie')
     created_at = models.DateTimeField(default=now)
     def __str__(self):
         return self.title

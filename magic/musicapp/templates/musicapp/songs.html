@@ -1,239 +1,286 @@
 {% extends 'basepage/base.html' %}
+{% load static %}
 {%block style%}
-<style>
-  .wrapper{
-    height:auto;
-    display: flex;
-    overflow-x:auto;
-  }
-  .wrapper::-webkit-scrollbar{
-    width:0;
-  }
-  .wrapper .item{
-    /* display: flex; */
-    width:20vw;
-    height: auto;
-    text-align: center;
-    margin-right:10px;
-    border: 1px solid black; 
-    border-radius: 8px;
-    
-  }
-  .song-image{
-    width:20vw;
-    /* height: 50%; */
-  }
-  a {
-    color: white;
-    text-decoration: none;
-  }
-.liked {
-  color: blue;
-}
-
-</style>
+<link rel="stylesheet" href="{% static 'css/content-list.css' %}">
 {% endblock%}
 {% block content %}
 <!-- Include Bootstrap CSS -->
-<h3>Popular songs </h3>
+<h1>Popular songs </h1>
 <div class="wrapper ">
-  
-    {% for song in popular_songs %}
-    <div class="item ">
-        <img src="{{song.album.image.url}}" alt="{{song.title}}" class="song-image">
-        <div class="songbody">
-          <div class="text-left p-2">
-            <div>Title: {{song.title}}</div>
-            <div>Artist: {% for artist in song.artists.all %}
-              {{artist}}
-              {%endfor%}
-            </div>
-            {% if song in liked %}
-              <div ><button class="like-button text-primary " data-song-id="{{ song.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{song.liked_by.all.count}}</i>  </button></div>
-              {% else %}
-              <div ><button class="like-button " data-song-id="{{ song.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{song.liked_by.all.count}}</i>  </button></div>
-            {%  endif %}
 
-          </div>
+  {% for song in popular_songs %}
+  <div class="item ">
+    <img class="account-img" src="{{ song.album.image.url }}" alt="image not found">
+    <div class="songbody px-2">
+      <h4>{{ song.title }} <span class="rating">({{song.album.release_date}})</span></h4>
+      <div>Album: {{ song.album.name}}</div>
+      <div>Artist: {% for artist in song.artists.all %}
+        {{artist}} {% endfor %}</div>
+      <div>Genre: {{song.genre}}</div>
+      {% if song in liked %}
+      <div><button class="like-button text-primary p-1" data-song-id="{{ song.id }}"> <i
+            class="fas fa-thumbs-up total-likes "> {{song.liked_by.all.count}}</i> </button></div>
+      {% else %}
+      <div><button class="like-button p-1" data-song-id="{{ song.id }}"> <i class="fas fa-thumbs-up total-likes ">
+            {{song.liked_by.all.count}}</i> </button></div>
+      {% endif %}
+      {% if song.subscription_only %}
+      <span class="premium-tag">Premium</span>
+      {% if status == 'active'%}
+      <form action="{% url 'song_history'%}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="song_id" value="{{song.id}}">
+        <button class="btn btn-outline-primary play-button">
+          <i class="fa fa-play"></i>
+        </button>
+      </form>
+      {% endif %}
+      {% else %}
 
-        </div>
-        <form action="{% url 'song_history'%}" method="post">
-          {% csrf_token %}
-          <input type="hidden" name="song_id" value="{{song.id}}">
-          <button class="btn btn-outline-primary">Play now</button>
-        </form>
+      <form action="{% url 'song_history'%}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="song_id" value="{{song.id}}">
+        <button class="btn btn-outline-primary play-button">
+          <i class="fa fa-play"></i>
+        </button>
+      </form>
+      {% endif %}
     </div>
-   
-    {% endfor %}
+  </div>
+
+  {% endfor %}
 
 </div>
 
 {% if recomendations %}
-<h3>Recommended for you  </h3>
+<h1>Recommended for you </h1>
 <div class="wrapper ">
-    {% for song in recomendations %}
-    <div class="item ">
-        <img src="{{song.album.image.url}}" alt="{{song.title}}" class="song-image">
-        <div class="songbody">
-          <div class="text-left p-2">
-            <div>Title: {{song.title}}</div>
-            <div>Artist: {% for artist in song.artists.all %}
-              {{artist}}
-              {%endfor%}
-            </div>
-            {% if song in liked %}
-              <div ><button class="like-button text-primary" data-song-id="{{ song.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{song.liked_by.all.count}}</i>  </button></div>
-              {% else %}
-              <div ><button class="like-button" data-song-id="{{ song.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{song.liked_by.all.count}}</i>  </button></div>
-            {%  endif %}
+  {% for song in recomendations %}
+  <div class="item ">
+    <img class="account-img" src="{{ song.album.image.url }}" alt="image not found">
+    <div class="songbody px-2">
+      <h4>{{ song.title }} <span class="rating">({{song.album.release_date}})</span></h4>
+      <div>Album: {{ song.album.name}}</div>
+      <div>Artist: {% for artist in song.artists.all %}
+        {{artist}} {% endfor %}</div>
+      <div>Genre: {{song.genre}}</div>
 
-          </div>
 
-        </div>
-        <form action="{% url 'song_history'%}" method="post">
-          {% csrf_token %}
-          <input type="hidden" name="song_id" value="{{song.id}}">
-          <button class="btn btn-outline-primary">Play now</button>
-        </form>
+      {% if song in liked %}
+      <div><button class="like-button text-primary p-1" data-song-id="{{ song.id }}"> <i
+            class="fas fa-thumbs-up total-likes "> {{song.liked_by.all.count}}</i> </button></div>
+      {% else %}
+      <div><button class="like-button p-1" data-song-id="{{ song.id }}"> <i class="fas fa-thumbs-up total-likes ">
+            {{song.liked_by.all.count}}</i> </button></div>
+      {% endif %}
+      {% if song.subscription_only %}
+      <span class="premium-tag">Premium</span>
+      {% if status == 'active'%}
+      <form action="{% url 'song_history'%}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="song_id" value="{{song.id}}">
+        <button class="btn btn-outline-primary play-button">
+          <i class="fa fa-play"></i>
+        </button>
+      </form>
+      {% endif %}
+      {% else %}
+
+      <form action="{% url 'song_history'%}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="song_id" value="{{song.id}}">
+        <button class="btn btn-outline-primary play-button">
+          <i class="fa fa-play"></i>
+        </button>
+      </form>
+      {% endif %}
     </div>
-   
-    {% endfor %}
+  </div>
+
+  {% endfor %}
 
 </div>
 {% endif %}
 <h1> Recent added </h1>
 <div class="wrapper ">
-  
+
   {% for song in latest_songs %}
- 
+
   <div class="item ">
-      <img src="{{song.album.image.url}}" alt="{{song.title}}" class="song-image">
-      <div class="songbody">
-        <div class="text-left p-2">
-          <div>Title: {{song.title}}{{ song.created_at }}</div>
-          <div>Artist: {% for artist in song.artists.all %}
-            {{artist}}
-            {%endfor%}
-          </div>
-          {% if song in liked %}
-              <div ><button class="like-button text-primary" data-song-id="{{ song.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{song.liked_by.all.count}}</i>  </button></div>
-              {% else %}
-              <div ><button class="like-button" data-song-id="{{ song.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{song.liked_by.all.count}}</i>  </button></div>
-            {%  endif %}
-
-        </div>
-
-      </div>
+    <img class="account-img" src="{{ song.album.image.url }}" alt="image not found">
+    <div class="songbody px-2">
+      <h4>{{ song.title }} <span class="rating">({{song.album.release_date}})</span></h4>
+      <div>Album: {{ song.album.name}}</div>
+      <div>Artist: {% for artist in song.artists.all %}
+        {{artist}} {% endfor %}</div>
+      <div>Genre: {{song.genre}}</div>
+      {% if song in liked %}
+      <div><button class="like-button text-primary p-1" data-song-id="{{ song.id }}"> <i
+            class="fas fa-thumbs-up total-likes "> {{song.liked_by.all.count}}</i> </button></div>
+      {% else %}
+      <div><button class="like-button p-1" data-song-id="{{ song.id }}"> <i class="fas fa-thumbs-up total-likes ">
+            {{song.liked_by.all.count}}</i> </button></div>
+      {% endif %}
+      {% if song.subscription_only %}
+      <span class="premium-tag">Premium</span>
+      {% if status == 'active'%}
       <form action="{% url 'song_history'%}" method="post">
         {% csrf_token %}
         <input type="hidden" name="song_id" value="{{song.id}}">
-        <button class="btn btn-outline-primary">Play now</button>
+        <button class="btn btn-outline-primary play-button">
+          <i class="fa fa-play"></i>
+        </button>
       </form>
+      {% endif %}
+      {% else %}
+
+      <form action="{% url 'song_history'%}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="song_id" value="{{song.id}}">
+        <button class="btn btn-outline-primary play-button">
+          <i class="fa fa-play"></i>
+        </button>
+      </form>
+      {% endif %}
+    </div>
   </div>
- 
+
   {% endfor %}
 
 </div>
+{% if recent_played %}
 <h1> Recent Played </h1>
+
 <div class="wrapper ">
-  
+
   {% for i in recent_played %}
- 
+
   <div class="item ">
-      <img src="{{i.song.album.image.url}}" alt="{{i.song.title}}" class="song-image">
-      <div class="songbody">
-        <div class="text-left p-2">
-          <div>Title: {{i.song.title}}{{ i.song.created_at }}</div>
-          <div>Artist: {% for artist in i.song.artists.all %}
-            {{artist}}
-            {%endfor%}
-          </div>
-          {% if song in liked %}
-              <div ><button class="like-button text-primary" data-song-id="{{ i.song.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{i.song.liked_by.all.count}}</i>  </button></div>
-              {% else %}
-              <div ><button class="like-button" data-song-id="{{ i.song.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{i.song.liked_by.all.count}}</i>  </button></div>
-            {%  endif %}
-
-        </div>
-
-      </div>
+    <img class="account-img" src="{{ i.song.album.image.url }}" alt="image not found">
+    <div class="songbody px-2">
+      <h4>{{ i.song.title }} <span class="rating">({{i.song.album.release_date}})</span></h4>
+      <div>Album: {{ i.song.album.name}}</div>
+      <div>Artist: {% for artist in i.song.artists.all %}
+        {{artist}} {% endfor %}</div>
+      <div>Genre: {{i.song.genre}}</div>
+      {% if i.song in liked %}
+      <div><button class="like-button text-primary p-1" data-song-id="{{ i.song.id }}"> <i
+            class="fas fa-thumbs-up total-likes "> {{i.song.liked_by.all.count}}</i> </button></div>
+      {% else %}
+      <div><button class="like-button p-1" data-song-id="{{ i.song.id }}"> <i class="fas fa-thumbs-up total-likes ">
+            {{i.song.liked_by.all.count}}</i> </button></div>
+      {% endif %}
+      {% if i.song.subscription_only %}
+      <span class="premium-tag">Premium</span>
+      {% if status == 'active'%}
       <form action="{% url 'song_history'%}" method="post">
         {% csrf_token %}
-        <input type="hidden" name="song_id" value="{{song.id}}">
-        <button class="btn btn-outline-primary">Play now</button>
+        <input type="hidden" name="song_id" value="{{i.song.id}}">
+        <button class="btn btn-outline-primary play-button">
+          <i class="fa fa-play"></i>
+        </button>
       </form>
+      {% endif %}
+      {% else %}
+
+      <form action="{% url 'song_history'%}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="song_id" value="{{i.song.id}}">
+        <button class="btn btn-outline-primary play-button">
+          <i class="fa fa-play"></i>
+        </button>
+      </form>
+      {% endif %}
+    </div>
   </div>
- 
+
   {% endfor %}
 
 </div>
+{% endif %}
 
-  {% for genre in genres %}
-    <h4>{{genre.name}}</h4>
-    <div class="wrapper ">
-  
-      {% for song in genre.songsgenre.all %}
-      <div class="item ">
-          <img src="{{song.album.image.url}}" alt="{{song.title}}" class="song-image">
-          <div class="songbody">
-            <div class="text-left p-2">
-              <div>Title: {{song.title}}</div>
-              <div>Artist: {% for artist in song.artists.all %}
-                {{artist}}
-                {%endfor%}
-              </div>
-              {% if song in liked %}
-              <div ><button class="like-button text-primary" data-song-id="{{ song.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{song.liked_by.all.count}}</i>  </button></div>
-              {% else %}
-              <div ><button class="like-button" data-song-id="{{ song.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{song.liked_by.all.count}}</i>  </button></div>
-            {%  endif %}
-  
-            </div>
-  
-          </div>
-          <form action="{% url 'song_history'%}" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="song_id" value="{{song.id}}">
-            <button class="btn btn-outline-primary">Play now</button>
-          </form>
-      </div>
-     
-      {% endfor %}
-  
+
+{% for genre in genres %}
+<h1>{{genre.name}}</h1>
+<div class="wrapper ">
+
+  {% for song in genre.songsgenre.all %}
+  <div class="item ">
+    <img class="account-img" src="{{ song.album.image.url }}" alt="image not found">
+    <div class="songbody px-2">
+      <h4>{{ song.title }} <span class="rating">({{song.album.release_date}})</span></h4>
+      <div>Album: {{ song.album.name}}</div>
+      <div>Artist: {% for artist in song.artists.all %}
+        {{artist}} {% endfor %}</div>
+      <div>Genre: {{song.genre}}</div>
+
+      {% if song in liked %}
+      <div><button class="like-button text-primary p-1" data-song-id="{{ song.id }}"> <i
+            class="fas fa-thumbs-up total-likes "> {{song.liked_by.all.count}}</i> </button></div>
+      {% else %}
+      <div><button class="like-button p-1" data-song-id="{{ song.id }}"> <i class="fas fa-thumbs-up total-likes ">
+            {{song.liked_by.all.count}}</i> </button></div>
+      {% endif %}
+      {% if song.subscription_only %}
+      <span class="premium-tag">Premium</span>
+      {% if status == 'active'%}
+      <form action="{% url 'song_history'%}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="song_id" value="{{song.id}}">
+        <button class="btn btn-outline-primary play-button">
+          <i class="fa fa-play"></i>
+        </button>
+      </form>
+      {% endif %}
+      {% else %}
+
+      <form action="{% url 'song_history'%}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="song_id" value="{{song.id}}">
+        <button class="btn btn-outline-primary play-button">
+          <i class="fa fa-play"></i>
+        </button>
+      </form>
+      {% endif %}
+    </div>
   </div>
+
   {% endfor %}
 
-  {% block script%} 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script>
-    $(document).ready(function() {
-     $('.like-button').off('click').on('click', function() {
-       var songId = $(this).data('song-id');
-       var likeButton = $(this);
-       $.ajax({
-         url: "{% url 'song_like_dislike' %}",
-         dataType: 'json',
-         data: { 'song_id': songId },
-         success: function(response) {
-           // update the like count
-           likeButton.find('.total-likes').text(response.total_likes);
-           if (response.liked) {
+</div>
+{% endfor %}
+
+{% block script%}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $('.like-button').off('click').on('click', function () {
+      var songId = $(this).data('song-id');
+      var likeButton = $(this);
+      $.ajax({
+        url: "{% url 'song_like_dislike' %}",
+        dataType: 'json',
+        data: { 'song_id': songId },
+        success: function (response) {
+          // update the like count
+          likeButton.find('.total-likes').text(response.total_likes);
+          if (response.liked) {
             likeButton.addClass('liked');
           } else {
             likeButton.removeClass('liked');
           }
-           
-         },
-       });
-     });
-   });
-   
-   </script>
-   <script>
-    $(document).ready(function(){
-      $('.like-button').addClass("btn btn-outline-secondary btn-sm")
+
+        },
+      });
     });
-   </script>
-  {% endblock %}
+  });
+
+</script>
+<script>
+  $(document).ready(function () {
+    $('.like-button').addClass("btn btn-outline-secondary btn-sm")
+  });
+</script>
+{% endblock %}
 
 {% endblock %}

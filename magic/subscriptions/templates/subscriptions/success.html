@@ -18,15 +18,16 @@
       </svg>
       <div class="description Box-root">
         <h3>Subscription to Starter plan successful!</h3>
+        <button class="btn btn-primary"><a href="{% url 'manage_subscription' %}">Manage Your Subscription</a></button>
       </div>
     </div>
-    <form action="/plans/create-portal-session/" method="POST">
+    <!-- <form action="/plans/create-portal-session/" method="POST">
       {%csrf_token%}
       {{session_id}}
       {{checkout_session_id}}
       <input type="hidden" id="session-id" name="session_id" value="{{checkout_session_id}}" />
       <button id="checkout-and-portal-button" type="submit">Manage your billing information</button>
-    </form>
+    </form> -->
   </section>
 </body>
 </html>

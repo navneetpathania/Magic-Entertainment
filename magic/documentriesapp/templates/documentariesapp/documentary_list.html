@@ -1,61 +1,7 @@
-
 {% extends 'basepage/base.html' %}
+{% load static %}
 {%block style%}
-<style>
-  .wrapper{
-    /* height:auto; */
-    display: flex;
-    overflow-x:auto;
-    flex-direction: row;
-    /* justify-content: space-evenly; */
-  }
-  .wrapper::-webkit-scrollbar{
-    width:0;
-  }
-  .wrapper .item{
-    min-width:30vw;
-    height: 400px;
-    display: flex;
-    flex-direction: column;
-    border: 1px solid black; 
-    border-radius: 8px;
-    margin-left: 10px;
-  }
-
-  .item img{
-    max-width: 100%;
-    max-height: 37%;
-
-  }
-.item .songbody{
-  text-align: left;
-  justify-content: space-between;
-}
-
-@media screen and (max-width: 768px) {
-  /* styles to apply when screen width is 768px or wider */
-  .item .songbody {
-    font-size: 10px;
-  }
-  .wrapper .item{
-    width:40vw;
-    height:300px;
-    /* display: flex; */
-    /* flex-direction: column; */
-    border: 1px solid black; 
-    border-radius: 8px;
-    margin-left: 10px;
-  }
-  .item img{
-    max-width: 100%;
-    max-height: 25%;
-  }
-}
-.liked {
-  color: blue;
-}
-</style>
-
+<link rel="stylesheet" href="{% static 'css/content-list.css' %}">
 {% endblock%}
 
 
@@ -64,170 +10,265 @@
 <h1>Popular documentaries</h1>
 <div class="wrapper ">
   {% for documentary in popular_documentaries %}
-    
-    <div class="item ">
-      <img class="account-img" src="{{ documentary.poster.url }}" alt="image not found">
-        <div class="songbody px-2">
-            <h4>{{ documentary.title }}</h4>
-              <p>Release date: {{ documentary.release_date }}</p>
-              <p>Director: {{ documentary.director }}</p>
-              <p>Rating: {{ documentary.rating }}</p>
-              {% if documentary in liked %}
-              <div ><button class="like-button text-primary" data-documentary-id="{{ documentary.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{documentary.liked_by.all.count}}</i>  </button></div>
-              {% else %}
-              <div ><button class="like-button" data-documentary-id="{{ documentary.id }}"> <i class="fas fa-thumbs-up total-likes "  >{{documentary.liked_by.all.count}}</i>  </button></div>
-              {%  endif %}
-            </div>
-          <!-- playbutton -->
-          <form action="{% url 'documentary_history'%}" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="documentary_id" value="{{documentary.id}}">
-            <button class="btn btn-outline-primary">Play now</button>
-          </form>
-        </div>
-   
-    {% endfor %}
+
+  <div class="item ">
+    <img class="account-img" src="{{ documentary.poster.url }}" alt="image not found">
+    <div class="songbody px-2">
+      <h4>{{ documentary.title }}</h4>
+      <div>Release date: {{ documentary.release_date }}</div>
+      <div>Director: {{ documentary.director }}</div>
+      <h2><i class="fab fa-imdb"></i> <span class="rating"> {{ documentary.rating }}</span></h2>
+
+      {% if documentary in liked %}
+      <div><button class="like-button text-primary p-1" data-documentary-id="{{ documentary.id }}"> <i
+            class="fas fa-thumbs-up total-likes "> {{documentary.liked_by.all.count}}</i> </button></div>
+      {% else %}
+      <div><button class="like-button p-1" data-documentary-id="{{ documentary.id }}"> <i
+            class="fas fa-thumbs-up total-likes ">
+            {{documentary.liked_by.all.count}}</i> </button></div>
+      {% endif %}
+      {% if documentary.subscription_only %}
+      <span class="premium-tag">Premium</span>
+      {% if status == 'active'%}
+      <form action="{% url 'documentary_history'%}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="documentary_id" value="{{documentary.id}}">
+        <button class="btn btn-outline-primary play-button">
+          <i class="fa fa-play"></i>
+        </button>
+      </form>
+      {% endif %}
+      {% else %}
+
+      <form action="{% url 'documentary_history'%}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="documentary_id" value="{{documentary.id}}">
+        <button class="btn btn-outline-primary play-button">
+          <i class="fa fa-play"></i>
+        </button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+
+  {% endfor %}
 </div>
 {% if recomendations %}
 <h1>Recommended for you</h1>
 <div class="wrapper ">
   {% for documentary in recomendations %}
-    
-    <div class="item ">
-      <img class="account-img" src="{{ documentary.poster.url }}" alt="image not found">
-        <div class="songbody px-2">
-            <h4>{{ documentary.title }}</h4>
-              <p>Release date: {{ documentary.release_date }}</p>
-              <p>Director: {{ documentary.director }}</p>
-              <p>Rating: {{ documentary.rating }}</p>
-              {% if documentary in liked %}
-              <div ><button class="like-button text-primary" data-documentary-id="{{ documentary.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{documentary.liked_by.all.count}}</i>  </button></div>
-              {% else %}
-              <div ><button class="like-button" data-documentary-id="{{ documentary.id }}"> <i class="fas fa-thumbs-up total-likes "  >{{documentary.liked_by.all.count}}</i>  </button></div>
-              {%  endif %}
-            </div>
-          <!-- playbutton -->
-          <form action="{% url 'documentary_history'%}" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="documentary_id" value="{{documentary.id}}">
-            <button class="btn btn-outline-primary">Play now</button>
-          </form>
-        </div>
-   
-    {% endfor %}
+
+  <div class="item ">
+    <img class="account-img" src="{{ documentary.poster.url }}" alt="image not found">
+    <div class="songbody px-2">
+      <h4>{{ documentary.title }}</h4>
+      <div>Release date: {{ documentary.release_date }}</div>
+      <div>Director: {{ documentary.director }}</div>
+      <h2><i class="fab fa-imdb"></i> <span class="rating"> {{ documentary.rating }}</span></h2>
+
+      {% if documentary in liked %}
+      <div><button class="like-button text-primary p-1" data-documentary-id="{{ documentary.id }}"> <i
+            class="fas fa-thumbs-up total-likes "> {{documentary.liked_by.all.count}}</i> </button></div>
+      {% else %}
+      <div><button class="like-button p-1" data-documentary-id="{{ documentary.id }}"> <i
+            class="fas fa-thumbs-up total-likes ">
+            {{documentary.liked_by.all.count}}</i> </button></div>
+      {% endif %}
+      {% if documentary.subscription_only %}
+      <span class="premium-tag">Premium</span>
+      {% if status == 'active'%}
+      <form action="{% url 'documentary_history'%}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="documentary_id" value="{{documentary.id}}">
+        <button class="btn btn-outline-primary play-button">
+          <i class="fa fa-play"></i>
+        </button>
+      </form>
+      {% endif %}
+      {% else %}
+
+      <form action="{% url 'documentary_history'%}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="documentary_id" value="{{documentary.id}}">
+        <button class="btn btn-outline-primary play-button">
+          <i class="fa fa-play"></i>
+        </button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+
+  {% endfor %}
 </div>
 {% endif %}
 <h1> Recent added </h1>
 <div class="wrapper ">
   {% for documentary in latest_documentaries %}
-    <div class="item ">
-      <img class="account-img" src="{{ documentary.poster.url }}" alt="image not found">
-        <div class="songbody px-2">
-            <h4>{{ documentary.title }}</h4>
-              <p>Release date: {{ documentary.release_date }}</p>
-              <p>Director: {{ documentary.director }}</p>
-              <p>Rating: {{ documentary.rating }}</p>
-              {% if documentary in liked %}
-              <div ><button class="like-button text-primary" data-documentary-id="{{ documentary.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{documentary.liked_by.all.count}}</i>  </button></div>
-              {% else %}
-              <div ><button class="like-button" data-documentary-id="{{ documentary.id }}"> <i class="fas fa-thumbs-up total-likes "  >{{documentary.liked_by.all.count}}</i>  </button></div>
-              {%  endif %}
-            </div>
-          <!-- playbutton -->
-          <form action="{% url 'documentary_history'%}" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="documentary_id" value="{{documentary.id}}">
-            <button class="btn btn-outline-primary">Play now</button>
-          </form>
-        </div>
-    
-    {% endfor %}
+  <div class="item ">
+    <img class="account-img" src="{{ documentary.poster.url }}" alt="image not found">
+    <div class="songbody px-2">
+      <h4>{{ documentary.title }}</h4>
+      <div>Release date: {{ documentary.release_date }}</div>
+      <div>Director: {{ documentary.director }}</div>
+      <h2><i class="fab fa-imdb"></i> <span class="rating"> {{ documentary.rating }}</span></h2>
+
+      {% if documentary in liked %}
+      <div><button class="like-button text-primary p-1" data-documentary-id="{{ documentary.id }}"> <i
+            class="fas fa-thumbs-up total-likes "> {{documentary.liked_by.all.count}}</i> </button></div>
+      {% else %}
+      <div><button class="like-button p-1" data-documentary-id="{{ documentary.id }}"> <i
+            class="fas fa-thumbs-up total-likes ">
+            {{documentary.liked_by.all.count}}</i> </button></div>
+      {% endif %}
+      {% if documentary.subscription_only %}
+      <span class="premium-tag">Premium</span>
+      {% if status == 'active'%}
+      <form action="{% url 'documentary_history'%}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="documentary_id" value="{{documentary.id}}">
+        <button class="btn btn-outline-primary play-button">
+          <i class="fa fa-play"></i>
+        </button>
+      </form>
+      {% endif %}
+      {% else %}
+
+      <form action="{% url 'documentary_history'%}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="documentary_id" value="{{documentary.id}}">
+        <button class="btn btn-outline-primary play-button">
+          <i class="fa fa-play"></i>
+        </button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+
+  {% endfor %}
 </div>
 <h1> Recent Played </h1>
 <div class="wrapper ">
   {% for i in recent_played %}
-    <div class="item ">
-      <img class="account-img" src="{{ i.documentary.poster.url }}" alt="image not found">
-        <div class="songbody px-2">
-            <h4>{{ i.documentary.title }}</h4>
-              <p>Release date: {{ i.documentary.release_date }}</p>
-              <p>Director: {{ i.documentary.director }}</p>
-              <p>Rating: {{ i.documentary.rating }}</p>
-              {% if documentary in liked %}
-              <div ><button class="like-button text-primary" data-documentary-id="{{ i.documentary.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{i.documentary.liked_by.all.count}}</i>  </button></div>
-              {% else %}
-              <div ><button class="like-button" data-documentary-id="{{ i.documentary.id }}"> <i class="fas fa-thumbs-up total-likes "  >{{i.documentary.liked_by.all.count}}</i>  </button></div>
-              {%  endif %}
-            </div>
-          <!-- playbutton -->
-          <form action="{% url 'documentary_history'%}" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="i.documentary_id" value="{{i.documentary.id}}">
-            <button class="btn btn-outline-primary">Play now</button>
-          </form>
-        </div>
-    
-    {% endfor %}
+  <div class="item ">
+    <img class="account-img" src="{{ i.documentary.poster.url }}" alt="image not found">
+    <div class="songbody px-2">
+      <h4>{{ i.documentary.title }}</h4>
+      <div>Release date: {{ documentary.release_date }}</div>
+      <div>Director: {{ i.documentary.director }}</div>
+      <h2><i class="fab fa-imdb"></i> <span class="rating"> {{ i.documentary.rating }}</span></h2>
+
+      {% if i.documentary in liked %}
+      <div><button class="like-button text-primary p-1" data-documentary-id="{{ i.documentary.id }}"> <i
+            class="fas fa-thumbs-up total-likes "> {{i.documentary.liked_by.all.count}}</i> </button></div>
+      {% else %}
+      <div><button class="like-button p-1" data-documentary-id="{{ i.documentary.id }}"> <i
+            class="fas fa-thumbs-up total-likes ">
+            {{i.documentary.liked_by.all.count}}</i> </button></div>
+      {% endif %}
+      {% if i.documentary.subscription_only %}
+      <span class="premium-tag">Premium</span>
+      {% if status == 'active'%}
+      <form action="{% url 'documentary_history'%}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="documentary_id" value="{{i.documentary.id}}">
+        <button class="btn btn-outline-primary play-button">
+          <i class="fa fa-play"></i>
+        </button>
+      </form>
+      {% endif %}
+      {% else %}
+
+      <form action="{% url 'documentary_history'%}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="documentary_id" value="{{i.documentary.id}}">
+        <button class="btn btn-outline-primary play-button">
+          <i class="fa fa-play"></i>
+        </button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+
+  {% endfor %}
 </div>
 <div>
   {% for category in categorys %}
-    <h4>{{category.name}}</h4>
-    <div class="wrapper ">
-  {% for documentary in category.documentary_set.all %}
-        <div class="item ">
-          <img class="account-img" src="{{ documentary.poster.url }}" alt="image not found">
-            <div class="songbody px-2">
-                <h4>{{ documentary.title }}</h4>
-                  <p>Release date: {{ documentary.release_date }}</p>
-                  <p>Director: {{ documentary.director }}</p>
-                  <p>Rating: {{ documentary.rating }}</p>
-                  {% if documentary in liked %}
-              <div ><button class="like-button text-primary" data-documentary-id="{{ documentary.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{documentary.liked_by.all.count}}</i>  </button></div>
-              {% else %}
-              <div ><button class="like-button" data-documentary-id="{{ documentary.id }}"> <i class="fas fa-thumbs-up total-likes "  >{{documentary.liked_by.all.count}}</i>  </button></div>
-              {%  endif %}
-                </div>
-              <!-- playbutton -->
-            <form action="{% url 'documentary_history'%}" method="post">
-              {% csrf_token %}
-              <input type="hidden" name="documentary_id" value="{{documentary.id}}">
-              <button class="btn btn-outline-primary">Play now</button>
-            </form>
-            </div>
-        {% endfor %}
+  <h4>{{category.name}}</h4>
+  <div class="wrapper ">
+    {% for documentary in category.documentary_set.all %}
+    <div class="item ">
+      <img class="account-img" src="{{ documentary.poster.url }}" alt="image not found">
+      <div class="songbody px-2">
+        <h4>{{ documentary.title }}</h4>
+        <div>Release date: {{ documentary.release_date }}</div>
+        <div>Director: {{ documentary.director }}</div>
+        <h2><i class="fab fa-imdb"></i> <span class="rating"> {{ documentary.rating }}</span></h2>
+
+        {% if documentary in liked %}
+        <div><button class="like-button text-primary p-1" data-documentary-id="{{ documentary.id }}"> <i
+              class="fas fa-thumbs-up total-likes "> {{documentary.liked_by.all.count}}</i> </button></div>
+        {% else %}
+        <div><button class="like-button p-1" data-documentary-id="{{ documentary.id }}"> <i
+              class="fas fa-thumbs-up total-likes ">
+              {{documentary.liked_by.all.count}}</i> </button></div>
+        {% endif %}
+        {% if documentary.subscription_only %}
+        <span class="premium-tag">Premium</span>
+        {% if status == 'active'%}
+        <form action="{% url 'documentary_history'%}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="documentary_id" value="{{documentary.id}}">
+          <button class="btn btn-outline-primary play-button">
+            <i class="fa fa-play"></i>
+          </button>
+        </form>
+        {% endif %}
+        {% else %}
+
+        <form action="{% url 'documentary_history'%}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="documentary_id" value="{{documentary.id}}">
+          <button class="btn btn-outline-primary play-button">
+            <i class="fa fa-play"></i>
+          </button>
+        </form>
+        {% endif %}
+      </div>
     </div>
+    {% endfor %}
+  </div>
   {% endfor %}
 </div>
 {% block script %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-  $(document).ready(function() {
-   $('.like-button').off('click').on('click', function() {
-     var documentaryId = $(this).data('documentary-id');
-     var likeButton = $(this);
-     $.ajax({
-       url: "{% url 'documentary_like_dislike' %}",
-       dataType: 'json',
-       data: { 'documentary_id': documentaryId },
-       success: function(response) {
-         // update the like count
-         likeButton.find('.total-likes').text(response.total_likes);
-         if (response.liked) {
-          likeButton.addClass('liked');
-        } else {
-          likeButton.removeClass('liked');
-        }
-         
-       },
-     });
-   });
- });
- 
- </script>
- <script>
-  $(document).ready(function(){
+  $(document).ready(function () {
+    $('.like-button').off('click').on('click', function () {
+      var documentaryId = $(this).data('documentary-id');
+      var likeButton = $(this);
+      $.ajax({
+        url: "{% url 'documentary_like_dislike' %}",
+        dataType: 'json',
+        data: { 'documentary_id': documentaryId },
+        success: function (response) {
+          // update the like count
+          likeButton.find('.total-likes').text(response.total_likes);
+          if (response.liked) {
+            likeButton.addClass('liked');
+          } else {
+            likeButton.removeClass('liked');
+          }
+
+        },
+      });
+    });
+  });
+
+</script>
+<script>
+  $(document).ready(function () {
     $('.like-button').addClass("btn btn-outline-secondary btn-sm")
   });
- </script>
+</script>
 {% endblock %}
 {% endblock %}

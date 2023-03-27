@@ -1,15 +1,20 @@
 {% extends 'basepage/base.html' %}
 {% block style %}
 <style>
-.container {
+.player-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height:30vh;
+ 
 }
 .card {
   background-color: #333;
   color: #fff;
+}
+.title-div{
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
 }
 
 .card-header {
@@ -30,14 +35,13 @@ video {
 </style>
 {% endblock %}
 {% block content %}
-  <div class="container align-center mt-5">
+  <div class="container align-center my-2 player-container">
     <div class="row">
       <div class="col-md-8 offset-md-2">
         <div class="card mb-3">
           <div class="card-header">
-            <h5 class="card-title">{{ movie.title }}</h5>
-            <!-- <span class="text-right"> <a href="{% url 'movie_download' movie.pk %}"><i class="fa fa-download fa-2xl" aria-hidden="true"></i></a>
-                </span> -->
+            <div class="title-div">
+              <h5 class="card-title">{{ movie.title }}</h5>
                 <form action="{% url 'mark_as_favorite' %}" method="post">
                   {% csrf_token %}
                   <input type="hidden" value="{{movie.id}}" name="movie_id">
@@ -47,18 +51,27 @@ video {
                     <button  type="submit" class="text-secondary btn btn-outline-danger"><i class="far fa-heart" id="favorite-icon"></i></button>
                   {% endif %}
                 </form>
-              
+            </div>
+            <div class="plot card-subtitle ">
+              <p class="text-muted">{{movie.plot}}</p>
+            </div>
+            
           </div>
           <div class="card-body">
             <div class="row">
-              <div class="col-md-4">
+              <div class="col-sm-4 card-subtitle ">
+                <img src="{{movie.poster.url}}" width=100% alt="">
+                <div>
+                <p class="text-muted my-1">Released: {{movie.release_date}}</p>
+                <p class="text-muted my-1">Director: {{movie.director}}</p>
+              </div>
+                
               </div>
               <div class="col-md-8">
                 <video controls>
                     <source src="{{ movie.video_file.url }}" type="video/mp4">
                     Your browser does not support HTML video.
                   </video>
-                  <!-- <a href="{% url 'movie_download' movie.pk %}"><i class="fa fa-download fa-2xl" aria-hidden="true"></i></a> -->
               </div>
             </div>
           </div>

@@ -18,6 +18,13 @@ class Subscription(models.Model):
     def __str__(self):
         return f'{self.user.username} ({self.active})'
 
+class PortalSession(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    portal_session_id = models.CharField(max_length=200, null=True, blank=True)
+
+    def __str__(self):
+        return self.user.username
+
 
 
 

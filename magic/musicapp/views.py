@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import FileResponse
+from django.contrib.auth.decorators import login_required
 from .models import Song, Genre, History
 from subscriptions.models import Subscription
 from django.core.paginator import Paginator
@@ -7,8 +8,13 @@ from django.db.models import Count, Case, When, Q
 from collections import Counter
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-# Create your views here.
+from subscriptions.models import Subscription
+import stripe
+from django.conf import settings
+stripe.api_key = settings.STRIPE_TEST_SECRET_KEY
 
+# Create your views here.
+@login_required
 def songs_view(request):
     songs = Song.objects.all()
     popular_songs = Song.objects.all().order_by('-total_likes')[:10]
@@ -19,8 +25,23 @@ def songs_view(request):
     most_common_genres = songs_suggestion(request)
     liked = Song.objects.filter(liked_by=request.user)
     recomendations = Song.objects.filter(Q(genre__name__in=most_common_genres)).exclude(songhistory__user=request.user)[:10]
+    # subscription check
+    subscription = Subscription.objects.filter(user=request.user).exists()
+    if subscription:
+        subscription_obj = Subscription.objects.filter(user=request.user).first()
+        checkout_session_id = subscription_obj.checkouts_session_id
+        checkout_session = stripe.checkout.Session.retrieve(checkout_session_id)
+        subscription_id = checkout_session.subscription
+        # print(checkout_session)
+        subscription_obj = stripe.Subscription.retrieve(subscription_id)
+        start_date = subscription_obj.current_period_start
+        end_date = subscription_obj.current_period_end
+        status = subscription_obj.status
+        # context['status'] = status
+    else:
+        status = False
     return render(request, 'musicapp/songs.html', {'songs': songs,'popular_songs':popular_songs, 'latest_songs':latest_songs, 'genres':genres,
-    'recent_played':obj,'liked':liked ,'recomendations':recomendations})
+    'recent_played':obj,'liked':liked ,'recomendations':recomendations,'status':status})
 
 def songs_suggestion(request):
     user = request.user

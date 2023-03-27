@@ -1,11 +1,12 @@
 {% extends 'basepage/base.html' %}
 {% block style %}
 <style>
-.container {
+.player-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height:30vh;
+  margin-left: -25px;
+ 
 }
 .card {
   background-color: #333;
@@ -20,60 +21,379 @@
   font-size: 1.2rem;
   font-style: italic;
 }
-
+.title-div{
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
 audio {
   width: 100%;
   margin-top: 1rem;
 }
 
 </style>
+<style>
+.audio-player {
+  display: flex;
+  align-items: center;
+}
+
+.audio-player button, .audio-player input[type="range"] {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 24px;
+  padding: 0;
+}
+
+.audio-player .play-pause {
+  margin-right: 10px;
+  background-color: blue;
+}
+
+.audio-player .progress-container {
+  height: 4px;
+  background-color: #ddd;
+  margin: 0 10px;
+  position: relative;
+  flex-grow: 1;
+}
+
+.audio-player .progress {
+  height: 100%;
+  background-color: #00bc8c;
+  width: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.audio-player .controls {
+  display: flex;
+  align-items: center;
+}
+
+.audio-player .controls input[type="range"] {
+  width: 50px;
+  margin: 0 10px;
+}
+
+.audio-player .duration {
+  margin-left: 10px;
+}
+
+
+.mute{
+  margin-right: 10px;
+  position: absolute;
+  bottom: 3px;
+  left: 5px;
+  bottom: 3px;
+}
+#controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  
+}
+.volume-slider{
+  position: absolute;
+  right:1px;
+  bottom:50%;
+  transform: rotate(-90deg);
+  opacity:0.5;
+  width: 30%;
+  right: -30px;
+  height: 3px;
+}
+.volume-slider:hover{
+  opacity: 1;
+}
+
+#time {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+#moreControls {
+  display: flex;
+  align-items: center;
+}
+
+.player{
+ width: 30vw;
+ height: 35vh;
+ position: relative;
+ /* margin: 10px; */
+}
+#playPauseBtn{
+  
+  /* position: absolute;
+  top: 29%;
+  left: 39%; */
+  /* padding:30px; */
+  border-radius: 50%;
+  opacity: 0.7;
+  box-sizing: border-box;
+}
+
+#time {
+  /* margin: 0 10px; */
+  width: 80%;
+  position: absolute;
+  bottom: 3px;
+  left: 10%;
+  opacity: 0.5;
+  font-size: 1rem;
+  margin-left:10px;
+}
+#time:hover{
+  opacity: 1;
+}
+#trackSlider{
+  width: 80%;
+  height: 3px;
+}
+.movecontrols{
+  position: absolute;
+  top: 39%;
+  left: 29%;
+}
+@media screen and (max-width: 769px) {
+  *{
+    font-size: 1rem;
+  }
+  .movecontrols{
+  left: 19%;
+}
+.card-subtitle{
+  font-size: 1rem;
+}
+#currentTime, #duration{
+  font-size:0.7rem;
+  
+}
+.player{
+ width: 35vw;
+ height: 35vh;
+ position: relative;
+ /* margin: 10px; */
+}
+.player-container {
+  
+  margin-left: 70px;
+ 
+}
+}
+
+@media screen and (max-width: 480px) {
+  .movecontrols{
+  left: 19%;
+}
+.player{
+ width: 55vw;
+ height: 35vh;
+ position: relative;
+ /* margin: 10px; */
+}
+.player-container {
+  
+  margin-left: 15px;
+ 
+}
+}
+</style>
+
 {% endblock %}
 {% block content %}
-  <div class="container align-center">
+  <div class="container align-center player-container">
     <div class="row">
-      <div class="col-md-8 offset-md-2">
+      <div class="col-sm-12">
         <div class="card mb-3">
           <div class="card-header">
+            <div class="title-div">
             <h5 class="card-title">{{ song.title }}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">
-                {% for artist in song.artists.all %}
-                {{artist}}
-              
-                {%endfor%}</h6>
-                <form action="{% url 'mark_song_as_favorite' %}" method="post">
-                  {% csrf_token %}
-                  <input type="hidden" value="{{song.id}}" name="song_id">
-                  {% if is_favorite %}
-                    <button  type="submit" class="text-danger btn  btn-outline-secondary"><i class="fas fa-heart" id="unfavorite-icon"></i></button>
-                  {% else %}
-                    <button  type="submit" class="text-secondary btn btn-outline-danger"><i class="far fa-heart" id="favorite-icon"></i></button>
-                  {% endif %}
-                </form>
-            <!-- <span class="text-right"> <a href="{% url 'song_download' song.pk %}"><i class="fa fa-download fa-2xl" aria-hidden="true"></i></a> -->
-                </span>
+            <form action="{% url 'mark_song_as_favorite' %}" method="post">
+              {% csrf_token %}
+              <input type="hidden" value="{{song.id}}" name="song_id">
+              {% if is_favorite %}
+                <button  type="submit" class="text-danger btn  btn-outline-secondary p-2"><i class="fas fa-heart" id="unfavorite-icon"></i></button>
+              {% else %}
+                <button  type="submit" class="text-secondary btn btn-outline-danger p-2"><i class="far fa-heart" id="favorite-icon"></i></button>
+              {% endif %}
+            </form>
           </div>
-          <div class="card-body">
-            <div class="row">
-              <div class="col-md-4">
-                <img class="img-fluid rounded" src="{{ song.album.image.url }}" alt="{{ song.album.name }}">
+            <h6 class="card-subtitle mb-2 text-muted">
+                Artist: {% for artist in song.artists.all %}
+                {{artist}}
+                {%endfor%}</h6>
+                <p class="card-subtitle mb-2 text-muted"> Released: {{song.album.release_date}}</p>
+               
+          <div class="card-body p-0">
+            <div class="">
+              <div class="">
+                <div class ="player"  style="background-image: url('{{song.album.image.url}}'); background-size: cover; background-position: fill;">
+                  <audio id="audio" src="{{song.audio_file.url}}"></audio>
+                  <div id="controls">
+                    <div class="movecontrols">
+                    {%if prev_song.id != none %}
+                    <a href="{% url 'play_song' pk=prev_song.id %} " class="btn btn-outline-secondary p-1 m-2"><i class="fas fa-backward"></i></a>
+                    {% endif %}
+                    <button id="playPauseBtn" class="btn btn-outline-secondary"><i class="fas fa-play"></i></button>
+                    {%if next_song.id != none %}
+                    <a href="{% url 'play_song' pk=next_song.id %}" class="btn btn-outline-secondary p-1 m-2"><i class="fas fa-forward"></i></a>
+                    {% endif %}
+                  </div>
+                    <div id="time">
+                      <span id="currentTime" class="mx-2">0:00</span>
+                      <input type="range" min="0" max="100" value="0" id="trackSlider">
+                      <span id="duration" class="mx-2">0:00</span>
+                      
+                    </div>
+                    <button class="mute btn btn-outline-secondary p-0"><i class="fas fa-volume-up"></i></button>
+                    <input type="range" class="volume-slider" min="0" max="1" step="0.1" value="0.5" >
+                      <div id="moreControls">
+                        <div id="playbackSpeed">1x</div>
+                        <button id="speedBtn" class="btn btn-outline-primary p-0 mx-1" ><i class="fas fa-tachometer-alt"></i></button>
+                        <button id="downloadBtn" class="btn btn-outline-primary p-0 mx-1"><i class="fas fa-download"></i></button>
+                      </div>
+                  </div>
+                  </div>
               </div>
-              <div class="col-md-8">
-                <audio controls>
-                  <source src="{{ song.audio_file.url }}" type="audio/mpeg">
-                </audio>
-              </div>
-              {%if prev_song.id != none %}
-            
-              <a href="{% url 'play_song' pk=prev_song.id %} " class="btn btn-primary p-2 m-2">Previous Song</a>
-              {% endif %}
               
-              {%if next_song.id != none %}
-              <a href="{% url 'play_song' pk=next_song.id %}" class="btn btn-success p-2 m-2">Next Song</a>
-              {% endif %}
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+
+
+
+  
+{% block script %}
+<script>
+  const audio = document.getElementById('audio');
+const playPauseBtn = document.getElementById('playPauseBtn');
+const currentTime = document.getElementById('currentTime');
+const duration = document.getElementById('duration');
+const trackSlider = document.getElementById('trackSlider');
+const volumeSlider = document.querySelector('.volume-slider');
+const muteBtn = document.querySelector('.mute');
+const speedBtn = document.getElementById('speedBtn');
+const downloadBtn = document.getElementById('downloadBtn');
+const playbackSpeed = document.getElementById('playbackSpeed');
+
+// Hide default controls
+audio.controls = false;
+
+// Play/pause button functionality
+playPauseBtn.addEventListener('click', function() {
+  if (audio.paused) {
+    audio.play();
+  } else {
+    audio.pause();
+  }
+});
+
+
+muteBtn.addEventListener('click', function() {
+  if (audio.volume > 0) {
+    audio.volume = 0;
+    muteBtn.innerHTML = '<i class="fas fa-volume-off"></i>';
+  } else {
+    audio.volume = volumeSlider.value;
+    muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+  }
+});
+
+volumeSlider.addEventListener('input', function() {
+  audio.volume = volumeSlider.value;
+  if (audio.volume == 0) {
+    muteBtn.innerHTML = '<i class="fas fa-volume-off"></i>';
+  } else {
+    muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+  }
+});
+// Display duration
+audio.addEventListener('loadedmetadata', function() {
+  const audioDuration = audio.duration;
+  let durationMinutes = Math.floor(audioDuration / 60);
+  let durationSeconds = Math.floor(audioDuration % 60);
+  if (durationSeconds < 10) {
+    durationSeconds = '0' + durationSeconds;
+  }
+  duration.textContent = durationMinutes + ':' + durationSeconds;
+});
+
+// Update current time and track progress
+audio.addEventListener('timeupdate', function() {
+  const audioCurrentTime = audio.currentTime;
+  let currentTimeMinutes = Math.floor(audioCurrentTime / 60);
+  let currentTimeSeconds = Math.floor(audioCurrentTime % 60);
+  if (currentTimeSeconds < 10) {
+    currentTimeSeconds = '0' + currentTimeSeconds;
+  }
+  currentTime.textContent = currentTimeMinutes + ':' + currentTimeSeconds;
+
+  const progressPercent = (audio.currentTime / audio.duration) * 100;
+  progress.style.width = progressPercent + '%';
+});
+
+// Update track position when track slider is moved
+trackSlider.addEventListener('input', function() {
+  const trackPosition = (trackSlider.value / 100) * audio.duration;
+  audio.currentTime = trackPosition;
+});
+
+// Update track slider and progress bar as audio plays
+audio.addEventListener('timeupdate', function() {
+  const progressPercent = (audio.currentTime / audio.duration) * 100;
+  progress.style.width = progressPercent + '%';
+
+  trackSlider.value = (audio.currentTime / audio.duration) * 100;
+});
+
+// Handle play/pause button icon change when audio ends
+audio.addEventListener('ended', function() {
+  playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+});
+
+// Handle play/pause button icon change when audio is manually paused
+audio.addEventListener('pause', function() {
+  playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+});
+
+// Handle play/pause button icon change when audio is manually played
+audio.addEventListener('play', function() {
+  playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+});
+// Change playback speed on click of speed button
+let currentSpeedIndex = 0;
+const playbackSpeeds = [0.5, 1, 1.5, 2];
+speedBtn.addEventListener('click', function() {
+  currentSpeedIndex++;
+  if (currentSpeedIndex >= playbackSpeeds.length) {
+    currentSpeedIndex = 0;
+  }
+  audio.playbackRate = playbackSpeeds[currentSpeedIndex];
+  playbackSpeed.textContent = playbackSpeeds[currentSpeedIndex] + 'x';
+});
+
+// Download audio on click of download button
+downloadBtn.addEventListener('click', function() {
+  const a = document.createElement('a');
+  a.href = audio.src;
+  a.download = 'audio.mp3';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+});
+
+
+</script>
+{% endblock %}
 {% endblock %}

@@ -82,16 +82,20 @@
                   data-toggle="dropdown"
                   aria-expanded="false"
                 >
-                {% if sub_status %}
-                <span class="badge badge-pill badge-primary">pre</span>
+
+                
+                {% if has_premium_subscription %}
+                <span class="badge badge-pill badge-primary ">pro</span>
                 {% endif %}{{request.user.username}}
                 </a>
                 <div class="dropdown-menu">
                   <a class="dropdown-item" href="{% url 'profile'%}">Profile</a>
-    
-                  <a class="dropdown-item" href="{% url 'plans'%}"
+
+                  {% if not has_premium_subscription %}
+                  <a class="dropdown-item activeuser" href="{% url 'plans'%}"
                     >Get premium</a
                   >
+                  {% endif %}
                  
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item" href="{% url 'logout'%}">Logout</a>
@@ -99,9 +103,12 @@
               </li>
             </ul>
             {%else %}
-            <ul class="navbar-nav">
-              <li>
-                <a href="{%url 'login'%}">Login</a>
+            <ul class="navbar-nav mx-1">
+              <li class="mx-1">
+                <a  class='text-decoration-none text-white' href="{%url 'login'%}">Login</a>
+              </li>
+              <li class="mx-1">
+                <a  class='text-decoration-none text-white' href="{%url 'user-register'%}">Sign up </a>
               </li>
             </ul>
             {% endif %}
@@ -134,6 +141,50 @@
       </div>  
     </div>
 
+    <footer class="footer">
+      <div class="container">
+        <div class="row">
+          <div class="footer-col">
+            <h4>MagicShow</h4>
+            <ul>
+              <li><a href="#">About us</a></li>
+              <li><a href="#">Login/Sign-up</a></li>
+              <li><a href="#">Privacy Policy</a></li>
+              <li><a href="#">Contact Us</a></li>
+            </ul>
+          </div>
+          <div class="footer-col ">
+            <h4>Get help</h4>
+            <ul>
+              <li><a href="#">FAQ</a></li>
+              <li><a href="#">Refunds</a></li>
+              <li><a href="#">Registration</a></li>
+              <li><a href="#">Complaints</a></li>
+              <li><a href="#">Payment Options</a></li>
+            </ul>
+          </div>
+          <div class="footer-col ">
+            <h4>Services</h4>
+            <ul>
+              <li><a href="#">Movies</a></li>
+              <li><a href="#">Music</a></li>
+              <li><a href="#">Games</a></li>
+              <li><a href="#">Documenteries</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Follow us</h4>
+            <div class="social-links">
+              <a href="#"><i class="fab fa-facebook-f"></i></a>
+              <a href="#"><i class="fab fa-twitter"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+              <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+   </footer>
+
     <script
       src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
       integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
@@ -146,7 +197,7 @@
     ></script>
 
     {% block script%} 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
     {% endblock %}
 
     <!-- Option 2: Separate Popper and Bootstrap JS -->

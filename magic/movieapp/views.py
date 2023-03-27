@@ -1,11 +1,16 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import FileResponse
+from django.contrib.auth.decorators import login_required
 from .models import Movie, Genre, History
 from django.db.models import Count,Q
 from collections import Counter
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-
+from subscriptions.models import Subscription
+import stripe
+from django.conf import settings
+stripe.api_key = settings.STRIPE_TEST_SECRET_KEY
+@login_required
 def movie_list(request):
     movies = Movie.objects.all()
     popular_movies = Movie.objects.all().order_by('-total_likes')
@@ -16,9 +21,25 @@ def movie_list(request):
     most_common_genres = movie_suggestion(request)
     recomendations = Movie.objects.filter(Q(genres__name__in=most_common_genres)).exclude(moviehistory__user=request.user)[:10]
     liked = Movie.objects.filter(liked_by=request.user)
+
+    # subscription check
+    subscription = Subscription.objects.filter(user=request.user).exists()
+    if subscription:
+        subscription_obj = Subscription.objects.filter(user=request.user).first()
+        checkout_session_id = subscription_obj.checkouts_session_id
+        checkout_session = stripe.checkout.Session.retrieve(checkout_session_id)
+        subscription_id = checkout_session.subscription
+        # print(checkout_session)
+        subscription_obj = stripe.Subscription.retrieve(subscription_id)
+        start_date = subscription_obj.current_period_start
+        end_date = subscription_obj.current_period_end
+        status = subscription_obj.status
+        # context['status'] = status
+    else:
+        status = False
     return render(request, 'movieapp/movie_list.html', {'movies': movies, 'popular_movies':popular_movies, 
     'latest_movies':latest_movies, 'genres':genres,'recent_played':obj,
-    'liked':liked,'recomendations':recomendations})
+    'liked':liked,'recomendations':recomendations, 'status':status})
 
 def movie_suggestion(request):
     user = request.user

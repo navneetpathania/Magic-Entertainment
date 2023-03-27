@@ -1,184 +1,104 @@
-
 {% extends 'basepage/base.html' %}
+{% load static %}
 {%block style%}
-<style>
-  .wrapper{
-    /* height:auto; */
-    display: flex;
-    overflow-x:auto;
-    flex-direction: row;
-    /* justify-content: space-evenly; */
-  }
-  .wrapper::-webkit-scrollbar{
-    width:0;
-  }
-  .wrapper .item{
-    min-width:30vw;
-    height: 400px;
-    display: flex;
-    flex-direction: column;
-    border: 1px solid black; 
-    border-radius: 8px;
-    margin-left: 10px;
-  }
-
-  .item img{
-    max-width: 100%;
-    max-height: 37%;
-
-  }
-.item .songbody{
-  text-align: left;
-  justify-content: space-between;
-}
-
-@media screen and (max-width: 768px) {
-  /* styles to apply when screen width is 768px or wider */
-  .item .songbody {
-    font-size: 10px;
-  }
-  .wrapper .item{
-    width:40vw;
-    height:300px;
-    /* display: flex; */
-    /* flex-direction: column; */
-    border: 1px solid black; 
-    border-radius: 8px;
-    margin-left: 10px;
-  }
-  .item img{
-    max-width: 100%;
-    max-height: 25%;
-  }
-}
-
-.section-div{
-    /* height:auto; */
-    display: flex;
-    overflow-x:auto;
-    flex-direction: row;
-    background-color: red;
-  }
-  .section-div::-webkit-scrollbar{
-    width:0;
-  }
-  .subsection-div{
-    min-width:300px;
-    min-height: 175px;
-    display: flex;
-    flex-direction: column;
-    border: 1px solid black; 
-    border-radius: 8px;
-    margin-left: 10px;
-    background-color: green;
-    transition: all 0.3s ease-in-out;
-
-  }
-  .image-div{
-    min-width: 100%;
-    min-height: 100%;
-  }
-  .imaeg-div img{
-    width: 300px;
-    height: 175px;
-  }
-  .body-div{
-    display: none;
-  }
- /* css for ajax like and displike */
- .liked {
-  color: blue;
-}
-
-</style>
-
+<link rel="stylesheet" href="{% static 'css/content-list.css' %}">
 {% endblock%}
-
-
 {% block content %}
 
-<!-- <div class="section-div mt-2">
-  {% for movie in popular_movies %}
-  <div class="subsection-div rounded-lg " onclick="growSize(this)">
-    <div class="imaeg-div">
-      <img class="account-img" src="{{ movie.poster.url }}" alt="image not found">
-    </div>
-    <div class="body-div">
-
-      <form action="{% url 'history'%}" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="movie_id" value="{{movie.id}}">
-        <button class="btn btn-outline-primary">Play now</button>
-      </form>
-
-      <h4>{{ movie.title }}</h4>
-      <div>
-        <p>{{movie.plot}}</p>
-      </div>
-    </div>
-  </div>
-  {% endfor %}
-</div> -->
 
 
 <!-- Include Bootstrap CSS -->
 <h1>Popular Movies </h1>
 <div class="wrapper ">
   {% for movie in popular_movies %}
- 
-    <div class="item ">
-      <img class="account-img" src="{{ movie.poster.url }}" alt="image not found">
-        <div class="songbody px-2">
-            <h4>{{ movie.title }}</h4>
-              <p>Release date: {{ movie.release_date }}</p>
-              <p>Director: {{ movie.director }}</p>
-              <p>Rating: {{ movie.rating }}</p>
-              {% if movie in liked %}
-              <div ><button class="like-button text-primary" data-movie-id="{{ movie.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{movie.liked_by.all.count}}</i>  </button></div>
-              {% else %}
-              <div ><button class="like-button" data-movie-id="{{ movie.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{movie.liked_by.all.count}}</i>  </button></div>
-              {%  endif %}
-            </div>
-            <form action="{% url 'history'%}" method="post">
-              {% csrf_token %}
-              <input type="hidden" name="movie_id" value="{{movie.id}}">
-              <button class="btn btn-outline-primary">Play now</button>
-            </form>
-        </div>
-    
-    {% endfor %}
+  <div class="item ">
+    <img class="account-img" src="{{ movie.poster.url }}" alt="image not found">
+    <div class="songbody px-2">
+      <h4>{{ movie.title }}</h4>
+      <div>Release date: {{ movie.release_date }}</div>
+      <div>Director: {{ movie.director }}</div>
+      <h2><i class="fab fa-imdb"></i> <span class="rating"> {{ movie.rating }}</span></h2>
+
+      {% if movie in liked %}
+      <div><button class="like-button text-primary p-1" data-movie-id="{{ movie.id }}"> <i
+            class="fas fa-thumbs-up total-likes "> {{movie.liked_by.all.count}}</i> </button></div>
+      {% else %}
+      <div><button class="like-button p-1" data-movie-id="{{ movie.id }}"> <i class="fas fa-thumbs-up total-likes ">
+            {{movie.liked_by.all.count}}</i> </button></div>
+      {% endif %}
+      {% if movie.subscription_only %}
+      <span class="premium-tag">Premium</span>
+      {% if status == 'active'%}
+      <form action="{% url 'history'%}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="movie_id" value="{{movie.id}}">
+        <button class="btn btn-outline-primary play-button">
+          <i class="fa fa-play"></i>
+        </button>
+      </form>
+      {% endif %}
+      {% else %}
+
+      <form action="{% url 'history'%}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="movie_id" value="{{movie.id}}">
+        <button class="btn btn-outline-primary play-button">
+          <i class="fa fa-play"></i>
+        </button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
 </div>
 
 <!-- favorite section -->
 {% if user.userfavmovie.all.count > 0 %}
 <h1>Favorite Movies </h1>
 <div class="wrapper ">
-  
-    
-  
+
   {% for movie in user.userfavmovie.all %}
- 
-    <div class="item ">
-      <img class="account-img" src="{{ movie.poster.url }}" alt="image not found">
-        <div class="songbody px-2">
-            <h4>{{ movie.title }}</h4>
-              <p>Release date: {{ movie.release_date }}</p>
-              <p>Director: {{ movie.director }}</p>
-              <p>Rating: {{ movie.rating }}</p>
-              {% if movie in liked %}
-              <div ><button class="like-button text-primary" data-movie-id="{{ movie.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{movie.liked_by.all.count}}</i>  </button></div>
-              {% else %}
-              <div ><button class="like-button" data-movie-id="{{ movie.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{movie.liked_by.all.count}}</i>  </button></div>
-              {%  endif %}
-            </div>
-            <form action="{% url 'history'%}" method="post">
-              {% csrf_token %}
-              <input type="hidden" name="movie_id" value="{{movie.id}}">
-              <button class="btn btn-outline-primary">Play now</button>
-            </form>
-        </div>
-    
-    {% endfor %}
+
+  <div class="item ">
+    <img class="account-img" src="{{ movie.poster.url }}" alt="image not found">
+    <div class="songbody px-2">
+      <h4>{{ movie.title }}</h4>
+      <div>Release date: {{ movie.release_date }}</div>
+      <div>Director: {{ movie.director }}</div>
+      <h2><i class="fab fa-imdb"></i> <span class="rating"> {{ movie.rating }}</span></h2>
+
+      {% if movie in liked %}
+      <div><button class="like-button text-primary p-1" data-movie-id="{{ movie.id }}"> <i
+            class="fas fa-thumbs-up total-likes "> {{movie.liked_by.all.count}}</i> </button></div>
+      {% else %}
+      <div><button class="like-button p-1" data-movie-id="{{ movie.id }}"> <i class="fas fa-thumbs-up total-likes ">
+            {{movie.liked_by.all.count}}</i> </button></div>
+      {% endif %}
+      {% if movie.subscription_only %}
+      <span class="premium-tag">Premium</span>
+      {% if status == 'active'%}
+      <form action="{% url 'history'%}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="movie_id" value="{{movie.id}}">
+        <button class="btn btn-outline-primary play-button">
+          <i class="fa fa-play"></i>
+        </button>
+      </form>
+      {% endif %}
+      {% else %}
+
+      <form action="{% url 'history'%}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="movie_id" value="{{movie.id}}">
+        <button class="btn btn-outline-primary play-button">
+          <i class="fa fa-play"></i>
+        </button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+
+  {% endfor %}
 </div>
 {% endif %}
 
@@ -186,88 +106,139 @@
 {% if recomendations %}
 <h1>Recommended for you </h1>
 <div class="wrapper ">
-  {% for movie in recomendations %}    
-    <div class="item ">
-      <img class="account-img" src="{{ movie.poster.url }}" alt="image not found">
-        <div class="songbody px-2">
-            <h4>{{ movie.title }}</h4>
-              <p>Release date: {{ movie.release_date }}</p>
-              <p>Director: {{ movie.director }}</p>
-              <p>Rating: {{ movie.rating }}</p>
-              {% if movie in liked %}
-              <div ><button class="like-button text-primary" data-movie-id="{{ movie.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{movie.liked_by.all.count}}</i>  </button></div>
-              {% else %}
-              <div ><button class="like-button" data-movie-id="{{ movie.id }}"> <i class="fas fa-thumbs-up total-likes "  >{{movie.liked_by.all.count}}</i>  </button></div>
-              {%  endif %}
-            </div>
-            <form action="{% url 'history'%}" method="post">
-              {% csrf_token %}
-              <input type="hidden" name="movie_id" value="{{movie.id}}">
-              <button class="btn btn-outline-primary">Play now</button>
-            </form>
-        </div>
-    
-    {% endfor %}
+  {% for movie in recomendations %}
+  <div class="item ">
+    <img class="account-img" src="{{ movie.poster.url }}" alt="image not found">
+    <div class="songbody px-2">
+      <h4>{{ movie.title }}</h4>
+      <div>Release date: {{ movie.release_date }}</div>
+      <div>Director: {{ movie.director }}</div>
+      <h2><i class="fab fa-imdb"></i> <span class="rating"> {{ movie.rating }}</span></h2>
+
+      {% if movie in liked %}
+      <div><button class="like-button text-primary p-1" data-movie-id="{{ movie.id }}"> <i
+            class="fas fa-thumbs-up total-likes "> {{movie.liked_by.all.count}}</i> </button></div>
+      {% else %}
+      <div><button class="like-button p-1" data-movie-id="{{ movie.id }}"> <i class="fas fa-thumbs-up total-likes ">
+            {{movie.liked_by.all.count}}</i> </button></div>
+      {% endif %}
+      {% if movie.subscription_only %}
+      <span class="premium-tag">Premium</span>
+      {% if status == 'active'%}
+      <form action="{% url 'history'%}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="movie_id" value="{{movie.id}}">
+        <button class="btn btn-outline-primary play-button">
+          <i class="fa fa-play"></i>
+        </button>
+      </form>
+      {% endif %}
+      {% else %}
+
+      <form action="{% url 'history'%}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="movie_id" value="{{movie.id}}">
+        <button class="btn btn-outline-primary play-button">
+          <i class="fa fa-play"></i>
+        </button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+
+  {% endfor %}
 </div>
 {% endif %}
 
 <h1> Recent added </h1>
 <div class="wrapper ">
   {% for movie in latest_movies %}
-    
-    <div class="item ">
-      <img class="account-img" src="{{ movie.poster.url }}" alt="image not found">
-        <div class="songbody px-2">
-            <h4>{{ movie.title }}</h4>
-              <p>Release date: {{ movie.release_date }}</p>
-              <p>Director: {{ movie.director }}</p>
-              <p>Rating: {{ movie.rating }}</p>
-              {% if movie in liked %}
-              <div ><button class="like-button text-primary" data-movie-id="{{ movie.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{movie.liked_by.all.count}}</i>  </button></div>
-              {% else %}
-              <div ><button class="like-button" data-movie-id="{{ movie.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{movie.liked_by.all.count}}</i>  </button></div>
-              {%  endif %}
-            </div>
-            <form action="{% url 'history'%}" method="post">
-              {% csrf_token %}
-              <input type="hidden" name="movie_id" value="{{movie.id}}">
-              <button class="btn btn-outline-primary">Play now</button>
-            </form>
-        </div>
-   
-    {% endfor %}
+
+  <div class="item ">
+    <img class="account-img" src="{{ movie.poster.url }}" alt="image not found">
+    <div class="songbody px-2">
+      <h4>{{ movie.title }}</h4>
+      <div>Release date: {{ movie.release_date }}</div>
+      <div>Director: {{ movie.director }}</div>
+      <h2><i class="fab fa-imdb"></i> <span class="rating"> {{ movie.rating }}</span></h2>
+
+      {% if movie in liked %}
+      <div><button class="like-button text-primary p-1" data-movie-id="{{ movie.id }}"> <i
+            class="fas fa-thumbs-up total-likes "> {{movie.liked_by.all.count}}</i> </button></div>
+      {% else %}
+      <div><button class="like-button p-1" data-movie-id="{{ movie.id }}"> <i class="fas fa-thumbs-up total-likes ">
+            {{movie.liked_by.all.count}}</i> </button></div>
+      {% endif %}
+      {% if movie.subscription_only %}
+      <span class="premium-tag">Premium</span>
+      {% if status == 'active'%}
+      <form action="{% url 'history'%}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="movie_id" value="{{movie.id}}">
+        <button class="btn btn-outline-primary play-button">
+          <i class="fa fa-play"></i>
+        </button>
+      </form>
+      {% endif %}
+      {% else %}
+
+      <form action="{% url 'history'%}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="movie_id" value="{{movie.id}}">
+        <button class="btn btn-outline-primary play-button">
+          <i class="fa fa-play"></i>
+        </button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+
+  {% endfor %}
 </div>
 
 {% if recent_played %}
 <h1> Recent Played </h1>
 <div class="wrapper ">
   {% for i in recent_played %}
- 
+
   <div class="item ">
-      <img src="{{i.movie.poster.url}}" alt="{{i.movie.title}}" class="song-image">
-      <div class="songbody">
-        <div class="text-left p-2">
-          <div>Title: {{i.movie.title}}{{ i.movie.created_at }}</div>
-          <div>Director: {% for artist in i.movie.director.all %}
-            {{artist}}
-            {%endfor%}
-          </div>
-          {% if movie in liked %}
-            <div ><button class="like-button text-primary" data-movie-id="{{ i.movie.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{i.movie.total_likes}}</i>  </button></div>
-          {% else %}
-            <div ><button class="like-button" data-movie-id="{{ i.movie.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{i.movie.total_likes}}</i>  </button></div>
-          {%  endif %}
+    <img class="account-img" src="{{ i.movie.poster.url }}" alt="image not found">
+    <div class="songbody px-2">
+      <h4>{{ i.movie.title }}</h4>
+      <div>Release date: {{ i.movie.release_date }}</div>
+      <div>Director: {{ i.movie.director }}</div>
+      <h2><i class="fab fa-imdb"></i> <span class="rating"> {{ i.movie.rating }}</span></h2>
 
-        </div>
-
-      </div>
+      {% if i.movie in liked %}
+      <div><button class="like-button text-primary p-1" data-movie-id="{{ i.movie.id }}"> <i
+            class="fas fa-thumbs-up total-likes "> {{i.movie.liked_by.all.count}}</i> </button></div>
+      {% else %}
+      <div><button class="like-button p-1" data-movie-id="{{ i.movie.id }}"> <i class="fas fa-thumbs-up total-likes ">
+            {{i.movie.liked_by.all.count}}</i> </button></div>
+      {% endif %}
+      {% if i.movie.subscription_only %}
+      <span class="premium-tag">Premium</span>
+      {% if status == 'active'%}
       <form action="{% url 'history'%}" method="post">
         {% csrf_token %}
-        <input type="hidden" name="movie_id" value="{{movie.id}}">
-        <button class="btn btn-outline-primary">Play now</button>
+        <input type="hidden" name="movie_id" value="{{i.movie.id}}">
+        <button class="btn btn-outline-primary play-button">
+          <i class="fa fa-play"></i>
+        </button>
       </form>
+      {% endif %}
+      {% else %}
+
+      <form action="{% url 'history'%}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="movie_id" value="{{i.movie.id}}">
+        <button class="btn btn-outline-primary play-button">
+          <i class="fa fa-play"></i>
+        </button>
+      </form>
+      {% endif %}
+    </div>
   </div>
- 
   {% endfor %}
 
 </div>
@@ -277,65 +248,84 @@
 
 <div>
   {% for genre in genres %}
-    <h4>{{genre.name}}</h4>
-    
-    <div class="wrapper ">
-      {% for movie in genre.movies.all %}
-        
-        <div class="item ">
-          <img class="account-img" src="{{ movie.poster.url }}" alt="image not found">
-            <div class="songbody px-2">
-                <h4>{{ movie.title }}</h4>
-                  <p>Release date: {{ movie.release_date }}</p>
-                  <p>Director: {{ movie.director }}</p>
-                  <p>Rating: {{ movie.rating }}</p>
-                  {% if movie in liked %}
-                  <div ><button class="like-button text-primary" data-movie-id="{{ movie.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{movie.liked_by.all.count}}</i>  </button></div>
-                  {% else %}
-                  <div ><button class="like-button" data-movie-id="{{ movie.id }}"> <i class="fas fa-thumbs-up total-likes "  > {{movie.liked_by.all.count}}</i>  </button></div>
-                  {%  endif %}
-                </div>
-                <form action="{% url 'history'%}" method="post">
-                  {% csrf_token %}
-                  <input type="hidden" name="movie_id" value="{{movie.id}}">
-                  <button class="btn btn-outline-primary">Play now</button>
-                </form>
-            </div>
-        {% endfor %}
+  <h1>{{genre.name}}</h1>
+
+  <div class="wrapper ">
+    {% for movie in genre.movies.all %}
+
+    <div class="item ">
+      <img class="account-img" src="{{ movie.poster.url }}" alt="image not found">
+      <div class="songbody px-2">
+        <h4>{{ movie.title }}</h4>
+        <div>Release date: {{ movie.release_date }}</div>
+        <div>Director: {{ movie.director }}</div>
+        <h2><i class="fab fa-imdb"></i> <span class="rating"> {{ movie.rating }}</span></h2>
+  
+        {% if movie in liked %}
+        <div><button class="like-button text-primary p-1" data-movie-id="{{ movie.id }}"> <i
+              class="fas fa-thumbs-up total-likes "> {{movie.liked_by.all.count}}</i> </button></div>
+        {% else %}
+        <div><button class="like-button p-1" data-movie-id="{{ movie.id }}"> <i class="fas fa-thumbs-up total-likes ">
+              {{movie.liked_by.all.count}}</i> </button></div>
+        {% endif %}
+        {% if movie.subscription_only %}
+        <span class="premium-tag">Premium</span>
+        {% if status == 'active'%}
+        <form action="{% url 'history'%}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="movie_id" value="{{movie.id}}">
+          <button class="btn btn-outline-primary play-button">
+          <i class="fa fa-play"></i>
+        </button>
+        </form>
+        {% endif %}
+        {% else %}
+  
+        <form action="{% url 'history'%}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="movie_id" value="{{movie.id}}">
+          <button class="btn btn-outline-primary play-button">
+          <i class="fa fa-play"></i>
+        </button>
+        </form>
+        {% endif %}
+      </div>
     </div>
+    {% endfor %}
+  </div>
   {% endfor %}
 </div>
-{% block script%} 
+{% block script%}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-  $(document).ready(function() {
-   $('.like-button').off('click').on('click', function() {
-     var movieId = $(this).data('movie-id');
-     var likeButton = $(this);
-     $.ajax({
-       url: "{% url 'like_dislike' %}",
-       dataType: 'json',
-       data: { 'movie_id': movieId },
-       success: function(response) {
-         // update the like count
-         likeButton.find('.total-likes').text(response.total_likes);
-         if (response.liked) {
-          likeButton.addClass('liked');
-        } else {
-          likeButton.removeClass('liked');
-        }
-         
-       },
-     });
-   });
- });
- 
- </script>
- <script>
-  $(document).ready(function(){
+  $(document).ready(function () {
+    $('.like-button').off('click').on('click', function () {
+      var movieId = $(this).data('movie-id');
+      var likeButton = $(this);
+      $.ajax({
+        url: "{% url 'like_dislike' %}",
+        dataType: 'json',
+        data: { 'movie_id': movieId },
+        success: function (response) {
+          // update the like count
+          likeButton.find('.total-likes').text(response.total_likes);
+          if (response.liked) {
+            likeButton.addClass('liked');
+          } else {
+            likeButton.removeClass('liked');
+          }
+
+        },
+      });
+    });
+  });
+
+</script>
+<script>
+  $(document).ready(function () {
     $('.like-button').addClass("btn btn-outline-secondary btn-sm")
   });
- </script>
+</script>
 {% endblock %}
 
 {% endblock %}

@@ -10,4 +10,23 @@
 #form-colum{
     background-image: linear-gradient(#2691D9,black);
 }
+button .text-white{
+  text-decoration: none;
+}
+.media-body button, .d-flex button {
+  font-size: 0.7rem;
+}
+@media screen and (max-width: 768px) {
+  button {
+    font-size: 0.7rem;
+  }
+}
+
+/* Further decrease font size for even smaller screens */
+@media screen and (max-width: 480px) {
+  button {
+    font-size: 0.6rem;
+  }
+}
+
 

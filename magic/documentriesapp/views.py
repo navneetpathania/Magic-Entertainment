@@ -5,6 +5,10 @@ from django.db.models import Count,Q
 from collections import Counter
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from subscriptions.models import Subscription
+import stripe
+from django.conf import settings
+stripe.api_key = settings.STRIPE_TEST_SECRET_KEY
 
 def documentary_list(request):
     documentaries = Documentary.objects.all()
@@ -16,9 +20,25 @@ def documentary_list(request):
     most_common_category = documentary_suggestion(request)
     liked = Documentary.objects.filter(liked_by=request.user)
     recomendations = Documentary.objects.filter(Q(category__name__in=most_common_category)).exclude(documentaryhistory__user=request.user)[:10]
+
+    subscription = Subscription.objects.filter(user=request.user).exists()
+    if subscription:
+        subscription_obj = Subscription.objects.filter(user=request.user).first()
+        checkout_session_id = subscription_obj.checkouts_session_id
+        checkout_session = stripe.checkout.Session.retrieve(checkout_session_id)
+        subscription_id = checkout_session.subscription
+        # print(checkout_session)
+        subscription_obj = stripe.Subscription.retrieve(subscription_id)
+        start_date = subscription_obj.current_period_start
+        end_date = subscription_obj.current_period_end
+        status = subscription_obj.status
+        # context['status'] = status
+    else:
+        status = False
+
     return render(request, 'documentariesapp/documentary_list.html', {'documentaries': documentaries, 'popular_documentaries':popular_documentaries, 
     'latest_documentaries':latest_documentaries, 'categorys':categorys, 'recent_played':obj, 
-    'recomendations':recomendations,'liked':liked})
+    'recomendations':recomendations,'liked':liked, 'status':status})
 
 def documentary_suggestion(request):
     user = request.user

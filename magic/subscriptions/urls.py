@@ -6,7 +6,7 @@ from .views import *
 urlpatterns = [
     path('',checkout, name="plans"),
     path("create-checkout-session/", create_checkout_session, name="create-checkout-session"),
-    path("create-portal-session/", create_portal_session, name="create-portal-session"), #add
+    path("create-portal-session/", create_portal_session, name="manage_subscription"), #add
     path("success/", success, name="success"),
     path('cancel/', cancel, name='cancel')
     # path('subscribe/<int:plan_id>/', views.subscribe, name='subscribe'),
