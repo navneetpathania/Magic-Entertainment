@@ -41,7 +41,7 @@ def songs_view(request):
     else:
         status = False
     return render(request, 'musicapp/songs.html', {'songs': songs,'popular_songs':popular_songs, 'latest_songs':latest_songs, 'genres':genres,
-    'recent_played':obj,'liked':liked ,'recomendations':recomendations,'status':status})
+    'recent_played':obj,'history_obj':history_obj,'liked':liked ,'recomendations':recomendations,'status':status})
 
 def songs_suggestion(request):
     user = request.user

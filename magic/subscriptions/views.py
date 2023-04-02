@@ -76,7 +76,7 @@ def create_portal_session(request):
 
     # This is the URL to which the customer will be redirected after they are
     # done managing their billing with the portal.
-    return_url = "http://localhost:8000/"
+    return_url = "http://localhost:8000/home"
 
     portalSession = stripe.billing_portal.Session.create(
         customer=checkout_session.customer,

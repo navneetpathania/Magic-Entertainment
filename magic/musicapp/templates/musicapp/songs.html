@@ -52,6 +52,56 @@
 
 </div>
 
+<!-- favorite section -->
+{% if user.userfavsong.all.count > 0 %}
+<h1>Favorite Songs </h1>
+<div class="wrapper ">
+
+  {% for song in user.userfavsong.all %}
+
+  <div class="item ">
+    <img class="account-img" src="{{ song.album.image.url }}" alt="image not found">
+    <div class="songbody px-2">
+      <h4>{{ song.title }} <span class="rating">({{song.album.release_date}})</span></h4>
+      <div>Album: {{ song.album.name}}</div>
+      <div>Artist: {% for artist in song.artists.all %}
+        {{artist}} {% endfor %}</div>
+      <div>Genre: {{song.genre}}</div>
+      {% if song in liked %}
+      <div><button class="like-button text-primary p-1" data-song-id="{{ song.id }}"> <i
+            class="fas fa-thumbs-up total-likes "> {{song.liked_by.all.count}}</i> </button></div>
+      {% else %}
+      <div><button class="like-button p-1" data-song-id="{{ song.id }}"> <i class="fas fa-thumbs-up total-likes ">
+            {{song.liked_by.all.count}}</i> </button></div>
+      {% endif %}
+      {% if song.subscription_only %}
+      <span class="premium-tag">Premium</span>
+      {% if status == 'active'%}
+      <form action="{% url 'song_history'%}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="song_id" value="{{song.id}}">
+        <button class="btn btn-outline-primary play-button">
+          <i class="fa fa-play"></i>
+        </button>
+      </form>
+      {% endif %}
+      {% else %}
+
+      <form action="{% url 'song_history'%}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="song_id" value="{{song.id}}">
+        <button class="btn btn-outline-primary play-button">
+          <i class="fa fa-play"></i>
+        </button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+
+  {% endfor %}
+</div>
+{% endif %}
+
 {% if recomendations %}
 <h1>Recommended for you </h1>
 <div class="wrapper ">
@@ -148,13 +198,13 @@
   {% endfor %}
 
 </div>
-{% if recent_played %}
+
+
+{% if history_obj %}
 <h1> Recent Played </h1>
-
 <div class="wrapper ">
-
   {% for i in recent_played %}
-
+  
   <div class="item ">
     <img class="account-img" src="{{ i.song.album.image.url }}" alt="image not found">
     <div class="songbody px-2">
@@ -197,7 +247,10 @@
   {% endfor %}
 
 </div>
+
 {% endif %}
+
+
 
 
 {% for genre in genres %}

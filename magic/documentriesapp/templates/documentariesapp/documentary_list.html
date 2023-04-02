@@ -53,6 +53,56 @@
 
   {% endfor %}
 </div>
+<!-- favorite section -->
+{% if user.userfavdocumentray.all.count > 0 %}
+<h1>Favorite Documentaries </h1>
+<div class="wrapper ">
+
+  {% for documentary in user.userfavdocumentray.all %}
+
+  <div class="item ">
+    <img class="account-img" src="{{ documentary.poster.url }}" alt="image not found">
+    <div class="songbody px-2">
+      <h4>{{ documentary.title }}</h4>
+      <div>Release date: {{ documentary.release_date }}</div>
+      <div>Director: {{ documentary.director }}</div>
+      <h2><i class="fab fa-imdb"></i> <span class="rating"> {{ documentary.rating }}</span></h2>
+
+      {% if documentary in liked %}
+      <div><button class="like-button text-primary p-1" data-documentary-id="{{ documentary.id }}"> <i
+            class="fas fa-thumbs-up total-likes "> {{documentary.liked_by.all.count}}</i> </button></div>
+      {% else %}
+      <div><button class="like-button p-1" data-documentary-id="{{ documentary.id }}"> <i
+            class="fas fa-thumbs-up total-likes ">
+            {{documentary.liked_by.all.count}}</i> </button></div>
+      {% endif %}
+      {% if documentary.subscription_only %}
+      <span class="premium-tag">Premium</span>
+      {% if status == 'active'%}
+      <form action="{% url 'documentary_history'%}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="documentary_id" value="{{documentary.id}}">
+        <button class="btn btn-outline-primary play-button">
+          <i class="fa fa-play"></i>
+        </button>
+      </form>
+      {% endif %}
+      {% else %}
+
+      <form action="{% url 'documentary_history'%}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="documentary_id" value="{{documentary.id}}">
+        <button class="btn btn-outline-primary play-button">
+          <i class="fa fa-play"></i>
+        </button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+
+  {% endfor %}
+</div>
+{% endif %}
 {% if recomendations %}
 <h1>Recommended for you</h1>
 <div class="wrapper ">
@@ -146,6 +196,7 @@
 
   {% endfor %}
 </div>
+{% if history_obj %}
 <h1> Recent Played </h1>
 <div class="wrapper ">
   {% for i in recent_played %}
@@ -191,6 +242,7 @@
 
   {% endfor %}
 </div>
+{% endif %}
 <div>
   {% for category in categorys %}
   <h4>{{category.name}}</h4>

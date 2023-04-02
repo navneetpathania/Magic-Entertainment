@@ -1,13 +1,55 @@
+
+
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Checkout canceled</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout canceled</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+      integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+      integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+    body{
+        font-family: poppins;
+        background-color: #252e39;
+        font-size: 1.5rem;
+        margin:auto;
+        /* justify-content: center;
+        align-items: center; */
+        color:white
+        
+    }
+    .container{
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      margin-top:100px;
+      }
+    </style>
 </head>
 <body>
-  <section>
-    <p>Picked the wrong subscription? Shop around then come back to pay!</p>
-    <a href="{% url 'home'%}">Home</a>
-  </section>
+    <div class="container text-center ">
+
+        <h3>Picked the wrong subscription? Shop around then come back to pay!</h3>
+        <button class="btn btn-primary p-1"> <a class="text-white" href="{% url 'home'%}">Go back</a></button>
+
+        
+    </div>
 </body>
 </html>
+
+

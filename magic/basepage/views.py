@@ -62,3 +62,8 @@ def contactView(request):
 
         
     
+def aboutView(request):
+    return render(request, 'basepage/about.html')
+
+def landingView(request):
+    return render(request, 'basepage/landingpage.html')

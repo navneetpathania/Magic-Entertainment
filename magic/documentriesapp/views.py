@@ -38,7 +38,7 @@ def documentary_list(request):
 
     return render(request, 'documentariesapp/documentary_list.html', {'documentaries': documentaries, 'popular_documentaries':popular_documentaries, 
     'latest_documentaries':latest_documentaries, 'categorys':categorys, 'recent_played':obj, 
-    'recomendations':recomendations,'liked':liked, 'status':status})
+    'recomendations':recomendations,'history_obj':history_obj,'liked':liked, 'status':status})
 
 def documentary_suggestion(request):
     user = request.user

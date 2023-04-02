@@ -1,0 +1,287 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>MagicShow Entertainment Portal - Index</title>
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <!-- Favicons -->
+  <link href="#" rel="icon">
+  <link href="#" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+  integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
+  crossorigin="anonymous"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+  integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+/>
+  
+
+  <!-- Template Main CSS File -->
+  <link href="{% static '/css/landingpage.css/' %}" rel="stylesheet">
+  <!-- <link rel="stylesheet" href="{% static '/vendor/aos/aos.css'%}">
+  <link rel="stylesheet" href="{% static '/vendor/aos/aos.js'%}"> -->
+  
+  
+</head>
+
+<body>
+
+  <!-- ======= Hero Section ======= -->
+  <section id="hero">
+
+    <div class="container">
+      <div class="row d-flex align-items-center"">
+      <div class=" col-lg-6 py-5 py-lg-0 order-2 order-lg-1" data-aos="fade-right">
+        <h1>MagicShow Entertainment Portal</h1>
+        <h2>Best Entertainment Services on Your Fingertips.</h2>
+        <a href="{% url 'user-register'%}" class="btn-get-started scrollto">Explore</a>
+      </div>
+      <div class="col-lg-6 order-1 order-lg-2 hero-img" data-aos="fade-left">
+        <img src="/media/landingpage/hero-img.png" class="img-fluid" alt="">
+      </div>
+    </div>
+    </div>
+
+  </section><!-- End Hero -->
+
+  <main id="main">
+    <!-- ======= About Section ======= -->
+    <section id="about" class="about section-bg">
+      <div class="container">
+
+        <div class="row gy-4">
+          <div class="image col-xl-5"></div>
+          <div class="col-xl-7">
+            <div class="content d-flex flex-column justify-content-center ps-0 ps-xl-4">
+              <h3 data-aos="fade-in" data-aos-delay="100">What We Offer 
+         		</h3>
+              <p data-aos="fade-in">
+                MagicShow Entertainment Have Variety of Services which you can choose from
+              </p>
+              <div class="row gy-4 mt-3">
+                <div class="col-md-6 icon-box" data-aos="fade-up">
+                  <i class="bx bx-images"></i>
+                  <h4><a href="#">Music/Videos</a></h4>
+                  <p>We Have Ample Of Music and Videos of Different Categories To Watch Online Or To Download</p>
+                </div>
+                <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="100">
+                  <i class="bx bx-cube-alt"></i>
+                  <h4><a href="#">Games</a></h4>
+                  <p>Bunch of Games To Play & Get Rid Of Unwanted Stress</p>
+                </div>
+                <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="200">
+                  <i class="bx bx-images"></i>
+                  <h4><a href="#">Documenteries</a></h4>
+                  <p>We Have Lot's Of Interesting Documenteries to watch</p>
+                </div>
+                <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="300">
+                  <i class="bx bx-shield"></i>
+                  <h4><a href="#">Virtual Tour</a></h4>
+                  <p>We Introduce virtual tour of our Museums</p>
+                </div>
+              </div>
+            </div><!-- End .content-->
+          </div>
+        </div>
+
+      </div>
+    </section><!-- End About Section -->
+
+    <!-- ======= Features Section ======= -->
+    <section id="features" class="features section-bg">
+      <div class="container">
+
+        <div class="section-title">
+          <h2 data-aos="fade-in">Features</h2>
+          <p data-aos="fade-in">MagicShow Portal has lot's of fun acivities to play with, you can enjoy games , music , videos as well as museums and virtual tour</p>
+        </div>
+
+        <div class="row content">
+          <div class="col-md-5" data-aos="fade-right">
+            <img src="/media/landingpage/features-1.svg" class="img-fluid" alt="">
+          </div>
+          <div class="col-md-7 pt-4" data-aos="fade-left">
+            <h3>Music & Videos on an single platform </h3>
+            <p class="fst-italic">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+              magna aliqua.
+            </p>
+            <ul>
+              <li><i class="bi bi-check"></i> we have variety of music like Rock , Pop , Hip hop , western and traditional</li>
+              <li><i class="bi bi-check"></i> Latest Movies , videos and Documenteries under one roof</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="row content">
+          <div class="col-md-5 order-1 order-md-2" data-aos="fade-left">
+            <img src="/media/landingpage/features-2.svg" class="img-fluid" alt="">
+          </div>
+          <div class="col-md-7 pt-5 order-2 order-md-1" data-aos="fade-right">
+            <h3>Interesting Games and karaoke</h3>
+            <p class="fst-italic">
+              Use your Leisure time to play these games and karaoke with friends & family and make your bonds more strong.
+            </p>
+            <p>
+              
+			  MagicShow Entertainment Portal has more then 10 different games and we are adding more in future. Along with it
+			  it also have karaoke system where any one can sing and record their voice in just few clicks.
+            </p>
+          </div>
+        </div>
+
+        <div class="row content">
+          <div class="col-md-5" data-aos="fade-right">
+            <img src="/media/landingpage/features-4.svg" class="img-fluid" alt="">
+          </div>
+          <div class="col-md-7 pt-5" data-aos="fade-left">
+            <h3>Documenteries & Virtual Tour</h3>
+            <p>MagicShow has very unique content in its documenteries section and virtual tour of museums</p>
+            <ul>
+              <li><i class="bi bi-check"></i> Updated Documenteries Content</li>
+              <li><i class="bi bi-check"></i> You can watch online & download your favourites Documenteries</li>
+              <li><i class="bi bi-check"></i> We have Virtual museums where you virtually watch your favourite museums</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </section><!-- End Features Section -->
+   
+
+    <!-- ======= Pricing Section ======= -->
+    <section id="pricing" class="pricing section-bg">
+      <div class="container">
+
+        <div class="section-title">
+          <h2 data-aos="fade-in">Pricing</h2>
+          <p data-aos="fade-in">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptate ipsa, ab facere doloribus nemo at dignissimos amet quae delectus vero ipsam porro odio a soluta suscipit accusamus? Eaque, numquam sapiente.</p>
+        </div>
+
+        <div class="row no-gutters">
+
+          <div class="col-lg-4 box" data-aos="zoom-in">
+            <h3>Free</h3>
+            <h4>$0<span>per month</span></h4>
+            <ul>
+              <li><i class="bx bx-check"></i>Access to all the non premium content</li>
+              <!-- <li><i class="bx bx-check"></i> Nec feugiat nisl pretium</li>
+              <li><i class="bx bx-check"></i> Nulla at volutpat diam uteera</li> -->
+              <li class="na"><i class="bx bx-x"></i> <span>Premium content access </span></li>
+              <li class="na"><i class="bx bx-x"></i> <span>Download acess to all content </span></li>
+            </ul>
+            <a href="{% url 'login'%}" class="get-started-btn">Enjoy</a>
+          </div>
+
+          <div class="col-lg-4 box featured" data-aos="zoom-in">
+            <span class="featured-badge">Suggested</span>
+            <h3>Monthly</h3>
+            <h4>$9.99<span>per month</span></h4>
+            <ul>
+                <li><i class="bx bx-check"></i>Access to all the non premium content</li>
+                <li><i class="bx bx-check"></i> Premium content access </li>
+                <li><i class="bx bx-check"></i> Download access to all content </li>
+                
+            </ul>
+            <a href="{% url 'plans'%}" class="get-started-btn">Buy Now</a>
+          </div>
+
+          <div class="col-lg-4 box" data-aos="zoom-in">
+            <h3>Annual</h3>
+            <h4>$79.99<span>Per Year</span></h4>
+            <ul>
+                <li><i class="bx bx-check"></i>Access to all the non premium content</li>
+                <li><i class="bx bx-check"></i> Premium content access </li>
+                <li><i class="bx bx-check"></i> Download access to all content </li>
+            </ul>
+            <a href="{% url 'plans'%}" class="get-started-btn">Buy Now</a>
+          </div>
+
+        </div>
+
+      </div>
+    </section><!-- End Pricing Section -->
+
+  </main><!-- End #main -->
+
+  <!-- ======= Footer ======= -->
+  <footer id="footer">
+  	 <div class="container">
+  	 	<div class="row">
+  	 		<div class="footer-col col-sm-3">
+  	 			<h4>MagicShow</h4>
+  	 			<ul>
+  	 				<li><a href="aboutus.html">About us</a></li>
+  	 				<li><a href="Login.html">Login/Sign-up</a></li>
+  	 				<li><a href="Policy.html">Privacy Policy</a></li>
+  	 				<li><a href="Contactus.html">Contact Us</a></li>
+  	 			</ul>
+  	 		</div>
+  	 		<div class="footer-col col-sm-3">
+  	 			<h4>Get help</h4>
+  	 			<ul>
+  	 				<li><a href="policy.html">FAQ</a></li>
+  	 				<li><a href="payments.html">Refunds</a></li>
+  	 				<li><a href="register.html">Registration</a></li>
+  	 				<li><a href="#">Complaints</a></li>
+  	 				<li><a href="Payments">Payment Options</a></li>
+  	 			</ul>
+  	 		</div>
+  	 		<div class="footer-col col-sm-3">
+  	 			<h4>Services</h4>
+  	 			<ul>
+  	 				<li><a href="movies.html">Movies</a></li>
+  	 				<li><a href="music.html">Music</a></li>
+  	 				<li><a href="#">Games</a></li>
+  	 				<li><a href="#">Documenteries</a></li>
+  	 			</ul>
+  	 		</div>
+  	 		<div class="footer-col col-sm-3">
+  	 			<h4>Follow us</h4>
+  	 			<div class="social-links">
+  	 				<a href="#"><i class="fab fa-facebook-f"></i></a>
+  	 				<a href="#"><i class="fab fa-twitter"></i></a>
+  	 				<a href="#"><i class="fab fa-instagram"></i></a>
+  	 				<a href="#"><i class="fab fa-linkedin-in"></i></a>
+  	 			</div>
+  	 		</div>
+			  
+			</div>
+      <div class="row copyright"> <p>All Rights Reserved - <a href="#">MagicShow</a> &#169; 
+        <script>document.write(new Date().getFullYear())</script>
+             </p> 
+  	 	</div>
+  	 </div>
+  </footer><!-- End Footer -->
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script> -->
+
+  <!-- Template Main JS File -->
+  <script src="{% static '/js/landingpage.js'%} "></script>
+  <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+
+</body>
+
+</html>

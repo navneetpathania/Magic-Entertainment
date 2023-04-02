@@ -39,7 +39,7 @@ def movie_list(request):
         status = False
     return render(request, 'movieapp/movie_list.html', {'movies': movies, 'popular_movies':popular_movies, 
     'latest_movies':latest_movies, 'genres':genres,'recent_played':obj,
-    'liked':liked,'recomendations':recomendations, 'status':status})
+    'liked':liked,'history_obj':history_obj,'recomendations':recomendations, 'status':status})
 
 def movie_suggestion(request):
     user = request.user
